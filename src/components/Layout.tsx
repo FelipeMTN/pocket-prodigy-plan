@@ -21,12 +21,12 @@ const Layout = () => {
   return (
     <div className="min-h-screen w-full bg-background overflow-hidden touch-manipulation">
       {/* Main Content */}
-      <main className="pb-24 min-h-screen">
+      <main className="pb-24 min-h-screen relative z-10">
         <ActiveComponent />
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-50 safe-area-inset-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-50 safe-area-inset-bottom pointer-events-auto">
         <div className="max-w-md mx-auto">
           <div className="flex justify-between items-center">
             {tabs.map((tab) => {
