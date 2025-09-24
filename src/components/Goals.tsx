@@ -7,41 +7,41 @@ const Goals = () => {
   const [goals, setGoals] = useState([
     {
       id: 1,
-      title: "Emergency Fund",
+      title: "Reserva de Emergência",
       target: 15000,
       current: 8500,
-      deadline: "Dec 2024",
-      category: "Safety",
+      deadline: "Dez 2024",
+      category: "Segurança",
       color: "from-blue-400 to-blue-600",
       monthlyTarget: 650
     },
     {
       id: 2,
-      title: "New Laptop",
+      title: "Notebook Novo",
       target: 3000,
       current: 1200,
-      deadline: "Aug 2024",
-      category: "Tech",
+      deadline: "Ago 2024",
+      category: "Tecnologia",
       color: "from-purple-400 to-purple-600",
       monthlyTarget: 450
     },
     {
       id: 3,
-      title: "Vacation to Europe",
+      title: "Viagem para Europa",
       target: 8000,
       current: 3200,
       deadline: "Jun 2025",
-      category: "Travel",
+      category: "Viagem",
       color: "from-green-400 to-green-600",
       monthlyTarget: 400
     },
     {
       id: 4,
-      title: "House Down Payment",
+      title: "Entrada da Casa",
       target: 50000,
       current: 22000,
-      deadline: "Dec 2025",
-      category: "Housing",
+      deadline: "Dez 2025",
+      category: "Casa",
       color: "from-orange-400 to-orange-600",
       monthlyTarget: 2334
     }
@@ -79,12 +79,12 @@ const Goals = () => {
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <div className="mb-8">
-          <h1 className="heading-display text-white italic mb-4">
-            Achieve your goals
-          </h1>
-          <p className="text-white/90 text-lg leading-relaxed max-w-sm">
-            Set financial targets and track your progress with smart saving insights.
-          </p>
+            <h1 className="heading-display text-white italic mb-4">
+              Alcance suas metas
+            </h1>
+            <p className="text-white/90 text-lg leading-relaxed max-w-sm">
+              Defina objetivos financeiros e acompanhe seu progresso com insights inteligentes de economia.
+            </p>
         </div>
 
         {/* Add Goal Button */}
@@ -93,7 +93,7 @@ const Goals = () => {
           className="button-glass w-full py-4 mb-8 text-white font-semibold flex items-center justify-center"
         >
           <Plus className="mr-2" size={20} />
-          Add New Goal
+          Adicionar Nova Meta
         </button>
       </div>
 
@@ -102,13 +102,13 @@ const Goals = () => {
         <div className="glass-card animate-fade-in">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">OVERALL PROGRESS</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">PROGRESSO GERAL</h3>
               <Target className="text-white/60" size={20} />
             </div>
 
             <div className="mb-6">
               <div className="flex justify-between items-baseline mb-2">
-                <span className="text-white font-medium">Total Saved</span>
+                <span className="text-white font-medium">Total Poupado</span>
                 <span className="text-white text-2xl font-semibold">
                   ${totalSaved.toLocaleString()} of ${totalTarget.toLocaleString()}
                 </span>
@@ -126,11 +126,11 @@ const Goals = () => {
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-white/60 text-sm">Goals Achieved</div>
+                <div className="text-white/60 text-sm">Metas Alcançadas</div>
                 <div className="text-white text-xl font-semibold">0</div>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-white/60 text-sm">Active Goals</div>
+                <div className="text-white/60 text-sm">Metas Ativas</div>
                 <div className="text-white text-xl font-semibold">{goals.length}</div>
               </div>
             </div>
@@ -162,14 +162,14 @@ const Goals = () => {
                         <button
                           onClick={() => handleAddToGoal(goal.id, 100)}
                           className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
-                          title="Add $100"
+                          title="Adicionar R$100"
                         >
                           <Plus size={16} />
                         </button>
                         <button
                           onClick={() => handleDeleteGoal(goal.id)}
                           className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
-                          title="Delete Goal"
+                          title="Excluir Meta"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -189,8 +189,8 @@ const Goals = () => {
                 {/* Progress Bar */}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-white/80">{progress.toFixed(1)}% complete</span>
-                    <span className="text-white/80">${remaining.toLocaleString()} to go</span>
+                    <span className="text-white/80">{progress.toFixed(1)}% completo</span>
+                    <span className="text-white/80">R${remaining.toLocaleString()} restante</span>
                   </div>
                   <div className="progress-bar h-3">
                     <div 
@@ -205,10 +205,10 @@ const Goals = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-white/80 text-sm">
                       <DollarSign className="mr-1" size={14} />
-                      Monthly target to reach goal
+                      Meta mensal para alcançar objetivo
                     </div>
                     <span className="text-white font-semibold">
-                      ${goal.monthlyTarget.toLocaleString()}
+                      R${goal.monthlyTarget.toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -222,7 +222,7 @@ const Goals = () => {
       <div className="px-6 pt-8 pb-4">
         <div className="glass-card p-4">
           <div className="text-white/90 text-sm text-center">
-            💡 <strong>Tip:</strong> Set up automatic transfers to reach your goals faster and stay consistent with your savings plan.
+            💡 <strong>Dica:</strong> Configure transferências automáticas para alcançar suas metas mais rápido e manter consistência com seu plano de poupança.
           </div>
         </div>
       </div>

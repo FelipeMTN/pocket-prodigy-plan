@@ -9,11 +9,11 @@ const Layout = () => {
   const [activeTab, setActiveTab] = useState("home");
 
   const tabs = [
-    { id: "home", label: "HOME", icon: Home, component: Dashboard },
-    { id: "spend", label: "SPEND", icon: CreditCard, component: Expenses },
-    { id: "invest", label: "INVEST", icon: TrendingUp, component: Investments },
-    { id: "goals", label: "GOALS", icon: Target, component: Goals },
-    { id: "settings", label: "MORE", icon: Settings, component: Dashboard },
+    { id: "home", label: "INÍCIO", icon: Home, component: Dashboard },
+    { id: "spend", label: "GASTOS", icon: CreditCard, component: Expenses },
+    { id: "invest", label: "INVESTIR", icon: TrendingUp, component: Investments },
+    { id: "goals", label: "METAS", icon: Target, component: Goals },
+    { id: "settings", label: "MAIS", icon: Settings, component: Dashboard },
   ];
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || Dashboard;

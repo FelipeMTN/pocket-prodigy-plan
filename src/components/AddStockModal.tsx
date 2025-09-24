@@ -17,17 +17,17 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
 
   // Popular Brazilian and US stocks
   const popularStocks = [
-    { ticker: "PETR4.SA", name: "Petrobras", price: 28.45, change: 1.2, sector: "Energy" },
-    { ticker: "VALE3.SA", name: "Vale", price: 65.80, change: -0.8, sector: "Materials" },
-    { ticker: "ITUB4.SA", name: "Itaú Unibanco", price: 32.15, change: 0.5, sector: "Banking" },
-    { ticker: "BBDC4.SA", name: "Bradesco", price: 15.67, change: 0.3, sector: "Banking" },
-    { ticker: "MGLU3.SA", name: "Magazine Luiza", price: 8.90, change: 2.1, sector: "Retail" },
-    { ticker: "WEGE3.SA", name: "WEG", price: 42.30, change: -0.4, sector: "Industrials" },
-    { ticker: "AAPL", name: "Apple Inc.", price: 189.25, change: 1.8, sector: "Technology" },
-    { ticker: "MSFT", name: "Microsoft", price: 378.90, change: 0.9, sector: "Technology" },
-    { ticker: "GOOGL", name: "Alphabet", price: 142.80, change: 1.4, sector: "Technology" },
-    { ticker: "TSLA", name: "Tesla", price: 248.50, change: 3.2, sector: "Automotive" },
-    { ticker: "NVDA", name: "NVIDIA", price: 875.30, change: 2.7, sector: "Technology" },
+    { ticker: "PETR4.SA", name: "Petrobras", price: 28.45, change: 1.2, sector: "Energia" },
+    { ticker: "VALE3.SA", name: "Vale", price: 65.80, change: -0.8, sector: "Materiais" },
+    { ticker: "ITUB4.SA", name: "Itaú Unibanco", price: 32.15, change: 0.5, sector: "Bancos" },
+    { ticker: "BBDC4.SA", name: "Bradesco", price: 15.67, change: 0.3, sector: "Bancos" },
+    { ticker: "MGLU3.SA", name: "Magazine Luiza", price: 8.90, change: 2.1, sector: "Varejo" },
+    { ticker: "WEGE3.SA", name: "WEG", price: 42.30, change: -0.4, sector: "Industriais" },
+    { ticker: "AAPL", name: "Apple Inc.", price: 189.25, change: 1.8, sector: "Tecnologia" },
+    { ticker: "MSFT", name: "Microsoft", price: 378.90, change: 0.9, sector: "Tecnologia" },
+    { ticker: "GOOGL", name: "Alphabet", price: 142.80, change: 1.4, sector: "Tecnologia" },
+    { ticker: "TSLA", name: "Tesla", price: 248.50, change: 3.2, sector: "Automotivo" },
+    { ticker: "NVDA", name: "NVIDIA", price: 875.30, change: 2.7, sector: "Tecnologia" },
     { ticker: "SPY", name: "SPDR S&P 500 ETF", price: 459.20, change: 0.6, sector: "ETF" }
   ];
 
@@ -67,7 +67,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
       <div className="glass-card w-full max-w-md animate-slide-up max-h-[80vh] overflow-hidden flex flex-col">
         <form onSubmit={handleSubmit} className="p-6 flex flex-col h-full">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-white font-heading font-semibold text-xl">Add to Portfolio</h3>
+            <h3 className="text-white font-heading font-semibold text-xl">Adicionar ao Portfólio</h3>
             <button
               type="button"
               onClick={onClose}
@@ -81,7 +81,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
             {/* Search */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Search Stocks
+                Buscar Ações
               </Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 text-white/60" size={20} />
@@ -89,7 +89,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                  placeholder="Search by ticker or company name..."
+                  placeholder="Busque por ticker ou nome da empresa..."
                 />
               </div>
             </div>
@@ -97,7 +97,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
             {/* Stock Selection */}
             <div className="flex-1 overflow-hidden">
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Popular Stocks
+                Ações Populares
               </Label>
               <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
                 {filteredStocks.map((stock) => (
@@ -141,7 +141,7 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
             {selectedStock && (
               <div>
                 <Label className="text-white/80 text-sm font-medium mb-2 block">
-                  Number of Shares
+                  Quantidade de Ações
                 </Label>
                 <Input
                   type="number"
@@ -149,12 +149,12 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
                   value={shares}
                   onChange={(e) => setShares(e.target.value)}
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                  placeholder="How many shares do you own?"
+                  placeholder="Quantas ações você possui?"
                   required
                 />
                 {shares && (
                   <div className="mt-2 text-white/80 text-sm">
-                    Total Value: ${(selectedStock.price * parseInt(shares || '0')).toFixed(2)}
+                    Valor Total: ${(selectedStock.price * parseInt(shares || '0')).toFixed(2)}
                   </div>
                 )}
               </div>
@@ -168,14 +168,14 @@ const AddStockModal = ({ isOpen, onClose, onAdd }: AddStockModalProps) => {
               onClick={onClose}
               className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
               disabled={!selectedStock || !shares}
               className="flex-1 button-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add to Portfolio
+              Adicionar ao Portfólio
             </Button>
           </div>
         </form>

@@ -11,14 +11,14 @@ const Dashboard = () => {
   });
 
   const [assets] = useState([
-    { name: "Real Estate", amount: 459000, percentage: 85, color: "from-blue-400 to-blue-600" },
-    { name: "Cash", amount: 27000, percentage: 5, color: "from-green-400 to-green-600" },
-    { name: "Investments", amount: 54000, percentage: 10, color: "from-purple-400 to-purple-600" }
+    { name: "Imóveis", amount: 459000, percentage: 85, color: "from-blue-400 to-blue-600" },
+    { name: "Dinheiro", amount: 27000, percentage: 5, color: "from-green-400 to-green-600" },
+    { name: "Investimentos", amount: 54000, percentage: 10, color: "from-purple-400 to-purple-600" }
   ]);
 
   const [liabilities] = useState([
-    { name: "Credit Cards", amount: 12853, percentage: 6, color: "from-red-400 to-red-600" },
-    { name: "Mortgage", amount: 201675, percentage: 94, color: "from-orange-400 to-orange-600" }
+    { name: "Cartões de Crédito", amount: 12853, percentage: 6, color: "from-red-400 to-red-600" },
+    { name: "Financiamento", amount: 201675, percentage: 94, color: "from-orange-400 to-orange-600" }
   ]);
 
   return (
@@ -28,17 +28,17 @@ const Dashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="heading-display text-white italic">
-              Track your net worth
+              Acompanhe seu patrimônio
             </h1>
             <p className="text-white/80 text-lg mt-2 max-w-xs leading-relaxed">
-              Unite your financial life to see how your assets and liabilities change over time.
+              Una sua vida financeira para ver como seus ativos e passivos mudam ao longo do tempo.
             </p>
           </div>
         </div>
 
         {/* Connect Accounts Button */}
         <button className="button-glass w-full py-4 mb-8 text-white font-semibold">
-          Connect your accounts
+          Conectar suas contas
         </button>
       </div>
 
@@ -48,14 +48,14 @@ const Dashboard = () => {
         <div className="glass-card animate-fade-in">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">ASSETS AND LIABILITIES</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">ATIVOS E PASSIVOS</h3>
               <Plus className="text-white/60" size={20} />
             </div>
 
             {/* Assets Section */}
             <div className="mb-8">
               <div className="flex justify-between items-baseline mb-4">
-                <h4 className="text-white font-medium">Assets</h4>
+                <h4 className="text-white font-medium">Ativos</h4>
                 <span className="text-white text-2xl font-semibold">
                   ${netWorth.assets.toLocaleString()}
                 </span>
@@ -79,7 +79,7 @@ const Dashboard = () => {
             {/* Liabilities Section */}
             <div>
               <div className="flex justify-between items-baseline mb-4">
-                <h4 className="text-white font-medium">Liabilities</h4>
+                <h4 className="text-white font-medium">Passivos</h4>
                 <span className="text-white text-2xl font-semibold">
                   ${netWorth.liabilities.toLocaleString()}
                 </span>
@@ -107,7 +107,7 @@ const Dashboard = () => {
           <div className="p-6">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="text-white/60 text-sm font-medium">NET WORTH</h3>
+                <h3 className="text-white/60 text-sm font-medium">PATRIMÔNIO LÍQUIDO</h3>
                 <div className="text-white text-3xl font-semibold mt-1">
                   ${(netWorth.assets - netWorth.liabilities).toLocaleString()}
                 </div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
                   <TrendingUp size={16} className="mr-1" />
                   +${netWorth.change.toLocaleString()} ({netWorth.changePercent}%)
                 </div>
-                <div className="text-white/60 text-xs mt-1">Last 6 months</div>
+                <div className="text-white/60 text-xs mt-1">Últimos 6 meses</div>
               </div>
             </div>
           </div>
@@ -127,7 +127,7 @@ const Dashboard = () => {
       {/* Bottom CTA */}
       <div className="px-6 pt-8 pb-4">
         <p className="text-white/80 text-center text-sm leading-relaxed">
-          Securely connect all your checking and savings accounts to track your finances in one place.
+          Conecte com segurança todas suas contas correntes e poupanças para acompanhar suas finanças em um só lugar.
         </p>
       </div>
     </div>

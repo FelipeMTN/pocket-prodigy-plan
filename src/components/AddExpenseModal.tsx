@@ -20,13 +20,13 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
   });
 
   const categories = [
-    { id: "food", label: "Food & Dining", icon: "🍕" },
-    { id: "transport", label: "Transport", icon: "🚗" },
-    { id: "shopping", label: "Shopping", icon: "🛍️" },
-    { id: "bills", label: "Bills & Utilities", icon: "⚡" },
-    { id: "entertainment", label: "Entertainment", icon: "🎬" },
-    { id: "health", label: "Healthcare", icon: "🏥" },
-    { id: "other", label: "Other", icon: "💳" }
+    { id: "food", label: "Comida & Restaurantes", icon: "🍕" },
+    { id: "transport", label: "Transporte", icon: "🚗" },
+    { id: "shopping", label: "Compras", icon: "🛍️" },
+    { id: "bills", label: "Contas & Utilidades", icon: "⚡" },
+    { id: "entertainment", label: "Entretenimento", icon: "🎬" },
+    { id: "health", label: "Saúde", icon: "🏥" },
+    { id: "other", label: "Outros", icon: "💳" }
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,7 +61,7 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
       <div className="glass-card w-full max-w-md animate-slide-up">
         <form onSubmit={handleSubmit} className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-white font-heading font-semibold text-xl">Add Expense</h3>
+            <h3 className="text-white font-heading font-semibold text-xl">Adicionar Gasto</h3>
             <button
               type="button"
               onClick={onClose}
@@ -75,7 +75,7 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
             {/* Amount */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Amount
+                Valor
               </Label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-3 text-white/60" size={20} />
@@ -94,13 +94,13 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
             {/* Description */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Description
+                Descrição
               </Label>
               <Input
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                placeholder="What did you spend on?"
+                placeholder="No que você gastou?"
                 required
               />
             </div>
@@ -108,7 +108,7 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
             {/* Category */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Category
+                Categoria
               </Label>
               <div className="grid grid-cols-2 gap-2">
                 {categories.map((category) => (
@@ -134,21 +134,21 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
             {/* Link to Goal */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Link to Goal (Optional)
+                Vincular à Meta (Opcional)
               </Label>
               <select
                 value={formData.goalId || ""}
                 onChange={(e) => setFormData(prev => ({ ...prev, goalId: e.target.value || undefined }))}
                 className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
               >
-                <option value="">No goal selected</option>
-                <option value="emergency">Emergency Fund</option>
-                <option value="travel">Vacation Fund</option>
-                <option value="laptop">New Laptop</option>
-                <option value="house">House Down Payment</option>
+                <option value="">Nenhuma meta selecionada</option>
+                <option value="emergency">Reserva de Emergência</option>
+                <option value="travel">Fundo de Viagem</option>
+                <option value="laptop">Notebook Novo</option>
+                <option value="house">Entrada da Casa</option>
               </select>
               <div className="text-white/60 text-xs mt-1">
-                Expenses can reduce your savings towards goals
+                Gastos podem reduzir suas economias nas metas
               </div>
             </div>
           </div>
@@ -160,13 +160,13 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
               onClick={onClose}
               className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
               className="flex-1 button-primary"
             >
-              Add Expense
+              Adicionar Gasto
             </Button>
           </div>
         </form>

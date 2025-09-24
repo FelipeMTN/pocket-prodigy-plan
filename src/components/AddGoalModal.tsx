@@ -20,14 +20,14 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
   });
 
   const categories = [
-    { id: "savings", label: "Emergency Fund", icon: "🛡️", color: "from-blue-400 to-blue-600" },
-    { id: "tech", label: "Technology", icon: "💻", color: "from-purple-400 to-purple-600" },
-    { id: "travel", label: "Travel", icon: "✈️", color: "from-green-400 to-green-600" },
-    { id: "housing", label: "Housing", icon: "🏠", color: "from-orange-400 to-orange-600" },
-    { id: "education", label: "Education", icon: "🎓", color: "from-indigo-400 to-indigo-600" },
-    { id: "health", label: "Health", icon: "🏥", color: "from-red-400 to-red-600" },
-    { id: "investment", label: "Investment", icon: "📈", color: "from-yellow-400 to-yellow-600" },
-    { id: "other", label: "Other", icon: "🎯", color: "from-pink-400 to-pink-600" }
+    { id: "savings", label: "Reserva de Emergência", icon: "🛡️", color: "from-blue-400 to-blue-600" },
+    { id: "tech", label: "Tecnologia", icon: "💻", color: "from-purple-400 to-purple-600" },
+    { id: "travel", label: "Viagem", icon: "✈️", color: "from-green-400 to-green-600" },
+    { id: "housing", label: "Casa", icon: "🏠", color: "from-orange-400 to-orange-600" },
+    { id: "education", label: "Educação", icon: "🎓", color: "from-indigo-400 to-indigo-600" },
+    { id: "health", label: "Saúde", icon: "🏥", color: "from-red-400 to-red-600" },
+    { id: "investment", label: "Investimento", icon: "📈", color: "from-yellow-400 to-yellow-600" },
+    { id: "other", label: "Outros", icon: "🎯", color: "from-pink-400 to-pink-600" }
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,7 +71,7 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
       <div className="glass-card w-full max-w-md animate-slide-up">
         <form onSubmit={handleSubmit} className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-white font-heading font-semibold text-xl">Create Financial Goal</h3>
+            <h3 className="text-white font-heading font-semibold text-xl">Criar Meta Financeira</h3>
             <button
               type="button"
               onClick={onClose}
@@ -85,13 +85,13 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
             {/* Goal Title */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Goal Title
+                Título da Meta
               </Label>
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                placeholder="e.g., Emergency Fund, New Laptop"
+                placeholder="ex: Reserva de Emergência, Notebook Novo"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
             {/* Target Amount */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Target Amount
+                Valor da Meta
               </Label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-3 text-white/60" size={20} />
@@ -118,7 +118,7 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
             {/* Category */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Category
+                Categoria
               </Label>
               <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                 {categories.map((category) => (
@@ -144,7 +144,7 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
             {/* Deadline */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Target Date
+                Data Alvo
               </Label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-3 text-white/60" size={20} />
@@ -162,13 +162,13 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
             {/* Description (Optional) */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Description (Optional)
+                Descrição (Opcional)
               </Label>
               <Input
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                placeholder="Why is this goal important to you?"
+                placeholder="Por que essa meta é importante para você?"
               />
             </div>
           </div>
@@ -180,13 +180,13 @@ const AddGoalModal = ({ isOpen, onClose, onAdd }: AddGoalModalProps) => {
               onClick={onClose}
               className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
               className="flex-1 button-primary"
             >
-              Create Goal
+              Criar Meta
             </Button>
           </div>
         </form>

@@ -11,10 +11,10 @@ const Investments = () => {
   ]);
   const [allocations] = useState({
     allocations: [
-      { name: "U.S. stocks", current: 40.2, target: 56, color: "from-blue-400 to-blue-600" },
-      { name: "Intl. stocks", current: 14.2, target: 24, color: "from-green-400 to-green-600" },
-      { name: "Crypto", current: 25, target: 31, color: "from-purple-400 to-purple-600" },
-      { name: "Cash", current: 37.6, target: 18.3, color: "from-orange-400 to-orange-600" }
+      { name: "Ações EUA", current: 40.2, target: 56, color: "from-blue-400 to-blue-600" },
+      { name: "Ações Intl.", current: 14.2, target: 24, color: "from-green-400 to-green-600" },
+      { name: "Cripto", current: 25, target: 31, color: "from-purple-400 to-purple-600" },
+      { name: "Dinheiro", current: 37.6, target: 18.3, color: "from-orange-400 to-orange-600" }
     ]
   });
 
@@ -65,12 +65,12 @@ const Investments = () => {
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <div className="mb-8">
-          <h1 className="heading-display text-white italic mb-4">
-            Track your investments
-          </h1>
-          <p className="text-white/90 text-lg leading-relaxed max-w-sm">
-            From crypto to 401(k)s, get the context you need to manage your investments with clarity.
-          </p>
+            <h1 className="heading-display text-white italic mb-4">
+              Acompanhe seus investimentos
+            </h1>
+            <p className="text-white/90 text-lg leading-relaxed max-w-sm">
+              De cripto a previdência, tenha o contexto necessário para gerenciar seus investimentos com clareza.
+            </p>
         </div>
 
         {/* Add Stock Button */}
@@ -79,7 +79,7 @@ const Investments = () => {
           className="button-glass w-full py-4 mb-8 text-white font-semibold flex items-center justify-center"
         >
           <Plus className="mr-2" size={20} />
-          Add to Portfolio
+          Adicionar ao Portfólio
         </button>
       </div>
 
@@ -88,7 +88,7 @@ const Investments = () => {
         <div className="glass-card animate-fade-in">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">YOUR PORTFOLIO</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">SEU PORTFÓLIO</h3>
               <div className="text-white text-lg font-semibold">
                 ${totalPortfolioValue.toFixed(2)}
               </div>
@@ -97,8 +97,8 @@ const Investments = () => {
             {portfolio.length === 0 ? (
               <div className="text-center text-white/60 py-8">
                 <TrendingUp className="mx-auto mb-4 opacity-50" size={48} />
-                <p>No stocks in your portfolio yet.</p>
-                <p className="text-sm">Add stocks to start tracking your investments.</p>
+                <p>Nenhuma ação em seu portfólio ainda.</p>
+                <p className="text-sm">Adicione ações para começar a acompanhar seus investimentos.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -123,7 +123,7 @@ const Investments = () => {
                           </div>
                           <div className="flex justify-between items-end">
                             <div>
-                              <div className="text-white/80 text-sm">{stock.shares} shares</div>
+                              <div className="text-white/80 text-sm">{stock.shares} ações</div>
                               <div className="text-white/60 text-xs">@ ${stock.price.toFixed(2)}</div>
                             </div>
                             <div className="text-right">
@@ -150,7 +150,7 @@ const Investments = () => {
         <div className="glass-card animate-fade-in">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">ASSET ALLOCATION</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">ALOCAÇÃO DE ATIVOS</h3>
               <Plus className="text-white/60" size={20} />
             </div>
 
@@ -163,7 +163,7 @@ const Investments = () => {
                     {/* Current allocation bar */}
                     <div className="mb-1">
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-white/80">Current ({allocation.current}%)</span>
+                        <span className="text-white/80">Atual ({allocation.current}%)</span>
                       </div>
                       <div className="progress-bar h-2">
                         <div 
@@ -176,7 +176,7 @@ const Investments = () => {
                     {/* Target allocation bar */}
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-white/60">Model ({allocation.target}%)</span>
+                        <span className="text-white/60">Meta ({allocation.target}%)</span>
                       </div>
                       <div className="progress-bar h-2">
                         <div 
@@ -196,7 +196,7 @@ const Investments = () => {
         <div className="glass-card animate-slide-up">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">MARKETS AT A GLANCE</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">MERCADOS EM RESUMO</h3>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -242,7 +242,7 @@ const Investments = () => {
         <div className="glass-card animate-scale-in">
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">CDI RATES (% OF CDI)</h3>
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">TAXAS CDI (% DO CDI)</h3>
             </div>
 
             <div className="space-y-2 max-h-80 overflow-y-auto">
@@ -265,7 +265,7 @@ const Investments = () => {
             </div>
             
             <div className="mt-4 text-white/60 text-xs">
-              *Rates updated daily • Current CDI: 11.75% p.a. • Last update: Today
+              *Taxas atualizadas diariamente • CDI atual: 11,75% a.a. • Última atualização: Hoje
             </div>
           </div>
         </div>
@@ -274,7 +274,7 @@ const Investments = () => {
       {/* Bottom CTA */}
       <div className="px-6 pt-8 pb-4">
         <p className="text-white/90 text-center text-sm leading-relaxed">
-          Securely connect all your brokerage and retirement accounts to track your finances in one place.
+          Conecte com segurança todas suas contas de corretora e previdência para acompanhar suas finanças em um só lugar.
         </p>
       </div>
     </div>
