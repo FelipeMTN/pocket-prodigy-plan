@@ -52,7 +52,11 @@ const Goals = () => {
   const overallProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
 
   const handleAddGoal = (goal: any) => {
-    setGoals(prev => [...prev, goal]);
+    const newGoal = {
+      ...goal,
+      id: Date.now() + Math.random(), // Ensure unique ID
+    };
+    setGoals(prev => [...prev, newGoal]);
   };
 
   const handleDeleteGoal = (goalId: number) => {

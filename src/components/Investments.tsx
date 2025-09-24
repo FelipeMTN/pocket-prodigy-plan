@@ -44,7 +44,11 @@ const Investments = () => {
   ]);
 
   const handleAddStock = (stock: any) => {
-    setPortfolio(prev => [...prev, stock]);
+    const newStock = {
+      ...stock,
+      id: Date.now() + Math.random(), // Ensure unique ID
+    };
+    setPortfolio(prev => [...prev, newStock]);
   };
 
   const handleRemoveStock = (stockId: number) => {

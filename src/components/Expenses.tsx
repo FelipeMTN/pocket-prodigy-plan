@@ -37,7 +37,11 @@ const Expenses = () => {
   });
 
   const handleAddExpense = (expense: any) => {
-    setExpenses(prev => [expense, ...prev]);
+    const newExpense = {
+      ...expense,
+      id: Date.now() + Math.random(), // Ensure unique ID
+    };
+    setExpenses(prev => [newExpense, ...prev]);
   };
 
   return (
@@ -69,6 +73,33 @@ const Expenses = () => {
             Adicionar Gasto
           </button>
         </div>
+
+        {/* Recent Expenses */}
+        {expenses.length > 0 && (
+          <div className="px-6 mb-6">
+            <div className="glass-card animate-fade-in">
+              <div className="p-4">
+                <h3 className="text-white/60 font-medium tracking-wider text-sm mb-4">GASTOS RECENTES</h3>
+                <div className="space-y-3">
+                  {expenses.slice(0, 3).map((expense) => (
+                    <div key={expense.id} className="flex justify-between items-center">
+                      <div>
+                        <div className="text-white font-medium">{expense.description}</div>
+                        <div className="text-white/60 text-sm">{new Date(expense.date).toLocaleDateString('pt-BR')}</div>
+                      </div>
+                      <div className="text-white font-semibold">R$ {expense.amount.toFixed(2)}</div>
+                    </div>
+                  ))}
+                </div>
+                {expenses.length > 3 && (
+                  <button className="text-primary text-sm mt-3 font-medium">
+                    Ver todos os gastos ({expenses.length})
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Budget Overview Card */}
         <div className="px-6 space-y-6">

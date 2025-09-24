@@ -19,14 +19,14 @@ const Layout = () => {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || Dashboard;
 
   return (
-    <div className="min-h-screen w-full bg-background overflow-hidden">
+    <div className="min-h-screen w-full bg-background overflow-hidden touch-manipulation">
       {/* Main Content */}
-      <main className="pb-20 min-h-screen">
+      <main className="pb-24 min-h-screen">
         <ActiveComponent />
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-2 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-50 safe-area-inset-bottom">
         <div className="max-w-md mx-auto">
           <div className="flex justify-between items-center">
             {tabs.map((tab) => {
