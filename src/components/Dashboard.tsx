@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { Plus, TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react";
+
+const Dashboard = () => {
+  const [netWorth] = useState({
+    total: 540000,
+    assets: 540000,
+    liabilities: 214528,
+    change: 26660,
+    changePercent: 32.17
+  });
+
+  const [assets] = useState([
+    { name: "Real Estate", amount: 459000, percentage: 85, color: "from-blue-400 to-blue-600" },
+    { name: "Cash", amount: 27000, percentage: 5, color: "from-green-400 to-green-600" },
+    { name: "Investments", amount: 54000, percentage: 10, color: "from-purple-400 to-purple-600" }
+  ]);
+
+  const [liabilities] = useState([
+    { name: "Credit Cards", amount: 12853, percentage: 6, color: "from-red-400 to-red-600" },
+    { name: "Mortgage", amount: 201675, percentage: 94, color: "from-orange-400 to-orange-600" }
+  ]);
+
+  return (
+    <div className="min-h-screen gradient-blue relative overflow-hidden">
+      {/* Header */}
+      <div className="px-6 pt-16 pb-8 relative z-10">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="heading-display text-white italic">
+              Track your net worth
+            </h1>
+            <p className="text-white/80 text-lg mt-2 max-w-xs leading-relaxed">
+              Unite your financial life to see how your assets and liabilities change over time.
+            </p>
+          </div>
+        </div>
+
+        {/* Connect Accounts Button */}
+        <button className="button-glass w-full py-4 mb-8 text-white font-semibold">
+          Connect your accounts
+        </button>
+      </div>
+
+      {/* Main Content Card */}
+      <div className="px-6 space-y-6 relative z-10">
+        {/* Assets and Liabilities Overview */}
+        <div className="glass-card animate-fade-in">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">ASSETS AND LIABILITIES</h3>
+              <Plus className="text-white/60" size={20} />
+            </div>
+
+            {/* Assets Section */}
+            <div className="mb-8">
+              <div className="flex justify-between items-baseline mb-4">
+                <h4 className="text-white font-medium">Assets</h4>
+                <span className="text-white text-2xl font-semibold">
+                  ${netWorth.assets.toLocaleString()}
+                </span>
+              </div>
+              
+              {assets.map((asset, index) => (
+                <div key={index} className="mb-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-white/80 text-sm">{asset.name} ({asset.percentage}%)</span>
+                  </div>
+                  <div className="progress-bar h-2">
+                    <div 
+                      className={`progress-fill bg-gradient-to-r ${asset.color}`}
+                      style={{ width: `${asset.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Liabilities Section */}
+            <div>
+              <div className="flex justify-between items-baseline mb-4">
+                <h4 className="text-white font-medium">Liabilities</h4>
+                <span className="text-white text-2xl font-semibold">
+                  ${netWorth.liabilities.toLocaleString()}
+                </span>
+              </div>
+              
+              {liabilities.map((liability, index) => (
+                <div key={index} className="mb-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-white/80 text-sm">{liability.name} ({liability.percentage}%)</span>
+                  </div>
+                  <div className="progress-bar h-2">
+                    <div 
+                      className={`progress-fill bg-gradient-to-r ${liability.color}`}
+                      style={{ width: `${liability.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Net Worth Summary */}
+        <div className="glass-card animate-slide-up">
+          <div className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-white/60 text-sm font-medium">NET WORTH</h3>
+                <div className="text-white text-3xl font-semibold mt-1">
+                  ${(netWorth.assets - netWorth.liabilities).toLocaleString()}
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center text-green-400 text-sm">
+                  <TrendingUp size={16} className="mr-1" />
+                  +${netWorth.change.toLocaleString()} ({netWorth.changePercent}%)
+                </div>
+                <div className="text-white/60 text-xs mt-1">Last 6 months</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="px-6 pt-8 pb-4">
+        <p className="text-white/80 text-center text-sm leading-relaxed">
+          Securely connect all your checking and savings accounts to track your finances in one place.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

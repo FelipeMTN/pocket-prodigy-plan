@@ -1,42 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Personal Finance App Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    /* Base Colors */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    /* Glass Card System */
+    --glass-background: 0 0% 100% / 0.05;
+    --glass-border: 0 0% 100% / 0.1;
+    --glass-backdrop: blur(20px);
+    
+    /* Primary Brand Colors */
+    --primary: 200 100% 50%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 200 100% 60%;
+    --primary-dark: 200 100% 40%;
+    
+    /* Gradients */
+    --gradient-blue: linear-gradient(135deg, hsl(220 100% 25%) 0%, hsl(200 100% 40%) 50%, hsl(190 80% 50%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(25 80% 40%) 0%, hsl(35 85% 50%) 50%, hsl(45 85% 60%) 100%);
+    --gradient-green: linear-gradient(135deg, hsl(150 60% 25%) 0%, hsl(160 70% 35%) 50%, hsl(170 75% 45%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(250 60% 30%) 0%, hsl(260 70% 40%) 50%, hsl(270 75% 50%) 100%);
+    
+    /* Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Neutral System */
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 65%;
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 95%;
+    --border: 240 6% 20%;
+    --input: 240 6% 15%;
+    --ring: 200 100% 50%;
+    
+    /* Semantic Interface Colors */
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --accent: 240 5% 20%;
+    --accent-foreground: 0 0% 95%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 95%;
+    
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    
+    /* Spacing & Layout */
+    --radius: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    
+    /* Animation System */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Shadows */
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +134,129 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+  }
+}
+
+@layer components {
+  /* Glass Effect Components */
+  .glass-card {
+    @apply bg-white/5 border border-white/10 backdrop-blur-[20px] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)];
+  }
+  
+  .glass-nav {
+    @apply bg-black/20 border-t border-white/10 backdrop-blur-[20px];
+  }
+  
+  /* Gradient Backgrounds */
+  .gradient-blue {
+    background: var(--gradient-blue);
+  }
+  
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .gradient-green {
+    background: var(--gradient-green);
+  }
+  
+  .gradient-purple {
+    background: var(--gradient-purple);
+  }
+  
+  /* Typography Variants */
+  .heading-display {
+    @apply text-4xl md:text-5xl font-heading font-medium leading-tight;
+  }
+  
+  .heading-xl {
+    @apply text-3xl md:text-4xl font-heading font-medium;
+  }
+  
+  .heading-lg {
+    @apply text-2xl md:text-3xl font-heading font-medium;
+  }
+  
+  .heading-md {
+    @apply text-xl md:text-2xl font-heading font-medium;
+  }
+  
+  /* Interactive Elements */
+  .button-glass {
+    @apply bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all duration-300 rounded-xl font-medium;
+  }
+  
+  .button-primary {
+    @apply bg-primary hover:bg-primary-light text-primary-foreground transition-all duration-300 rounded-xl font-medium shadow-lg;
+  }
+  
+  /* Progress Components */
+  .progress-bar {
+    @apply w-full bg-white/10 rounded-full overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-primary to-primary-light transition-all duration-700 ease-out;
+  }
+  
+  /* Chart Containers */
+  .chart-container {
+    @apply glass-card p-6 space-y-4;
+  }
+  
+  /* Navigation Styles */
+  .nav-item {
+    @apply flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all duration-200;
+  }
+  
+  .nav-item.active {
+    @apply text-primary bg-white/10;
+  }
+  
+  .nav-item:not(.active) {
+    @apply text-muted-foreground hover:text-foreground hover:bg-white/5;
+  }
+  
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+}
+
+@layer utilities {
+  /* Custom Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  /* Backdrop Blur Utilities */
+  .backdrop-blur-glass {
+    backdrop-filter: blur(20px);
   }
 }
