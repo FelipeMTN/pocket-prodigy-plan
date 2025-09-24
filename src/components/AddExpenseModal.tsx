@@ -15,7 +15,8 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
     amount: "",
     category: "food",
     description: "",
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    goalId: undefined as string | undefined
   });
 
   const categories = [
@@ -38,6 +39,7 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
       category: formData.category,
       description: formData.description,
       date: formData.date,
+      goalId: formData.goalId,
       timestamp: new Date().toISOString()
     };
 
@@ -47,7 +49,8 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
       amount: "",
       category: "food",
       description: "",
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
+      goalId: undefined
     });
   };
 
@@ -128,20 +131,24 @@ const AddExpenseModal = ({ isOpen, onClose, onAdd }: AddExpenseModalProps) => {
               </div>
             </div>
 
-            {/* Date */}
+            {/* Link to Goal */}
             <div>
               <Label className="text-white/80 text-sm font-medium mb-2 block">
-                Date
+                Link to Goal (Optional)
               </Label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-3 text-white/60" size={20} />
-                <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                  className="pl-10 bg-white/10 border-white/20 text-white"
-                  required
-                />
+              <select
+                value={formData.goalId || ""}
+                onChange={(e) => setFormData(prev => ({ ...prev, goalId: e.target.value || undefined }))}
+                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
+              >
+                <option value="">No goal selected</option>
+                <option value="emergency">Emergency Fund</option>
+                <option value="travel">Vacation Fund</option>
+                <option value="laptop">New Laptop</option>
+                <option value="house">House Down Payment</option>
+              </select>
+              <div className="text-white/60 text-xs mt-1">
+                Expenses can reduce your savings towards goals
               </div>
             </div>
           </div>

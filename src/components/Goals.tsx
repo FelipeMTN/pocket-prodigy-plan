@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Plus, Target, Calendar, DollarSign } from "lucide-react";
+import { Plus, Target, Calendar, DollarSign, Edit3, Trash2 } from "lucide-react";
+import AddGoalModal from "./AddGoalModal";
 
 const Goals = () => {
-  const [goals] = useState([
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [goals, setGoals] = useState([
     {
       id: 1,
       title: "Emergency Fund",
@@ -47,10 +49,33 @@ const Goals = () => {
 
   const totalSaved = goals.reduce((sum, goal) => sum + goal.current, 0);
   const totalTarget = goals.reduce((sum, goal) => sum + goal.target, 0);
-  const overallProgress = (totalSaved / totalTarget) * 100;
+  const overallProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
+
+  const handleAddGoal = (goal: any) => {
+    setGoals(prev => [...prev, goal]);
+  };
+
+  const handleDeleteGoal = (goalId: number) => {
+    setGoals(prev => prev.filter(goal => goal.id !== goalId));
+  };
+
+  const handleAddToGoal = (goalId: number, amount: number) => {
+    setGoals(prev => prev.map(goal => 
+      goal.id === goalId 
+        ? { ...goal, current: Math.min(goal.current + amount, goal.target) }
+        : goal
+    ));
+  };
 
   return (
-    <div className="min-h-screen gradient-purple relative overflow-hidden">
+    <>
+      <AddGoalModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAdd={handleAddGoal}
+      />
+      
+      <div className="min-h-screen gradient-purple relative overflow-hidden">
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <div className="mb-8">
@@ -63,7 +88,10 @@ const Goals = () => {
         </div>
 
         {/* Add Goal Button */}
-        <button className="button-glass w-full py-4 mb-8 text-white font-semibold flex items-center justify-center">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="button-glass w-full py-4 mb-8 text-white font-semibold flex items-center justify-center"
+        >
           <Plus className="mr-2" size={20} />
           Add New Goal
         </button>
@@ -118,22 +146,42 @@ const Goals = () => {
             <div key={goal.id} className="glass-card animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h4 className="text-white font-semibold text-lg">{goal.title}</h4>
-                    <div className="flex items-center text-white/60 text-sm mt-1">
-                      <Calendar className="mr-1" size={14} />
-                      <span className="mr-3">{goal.deadline}</span>
-                      <span className="px-2 py-1 bg-white/10 rounded-full text-xs">
-                        {goal.category}
-                      </span>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="text-white font-semibold text-lg">{goal.title}</h4>
+                        <div className="flex items-center text-white/60 text-sm mt-1">
+                          <Calendar className="mr-1" size={14} />
+                          <span className="mr-3">{goal.deadline}</span>
+                          <span className="px-2 py-1 bg-white/10 rounded-full text-xs">
+                            {goal.category}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleAddToGoal(goal.id, 100)}
+                          className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+                          title="Add $100"
+                        >
+                          <Plus size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteGoal(goal.id)}
+                          className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                          title="Delete Goal"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-white font-semibold">
-                      ${goal.current.toLocaleString()}
-                    </div>
-                    <div className="text-white/60 text-sm">
-                      of ${goal.target.toLocaleString()}
+                    <div className="text-right mt-2">
+                      <div className="text-white font-semibold">
+                        ${goal.current.toLocaleString()}
+                      </div>
+                      <div className="text-white/60 text-sm">
+                        of ${goal.target.toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -179,6 +227,7 @@ const Goals = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
