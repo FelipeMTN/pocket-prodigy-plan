@@ -40,43 +40,58 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-// Fetch aggregated assets/liabilities and cash flow from Supabase.
-// These queries should correspond to your tables and RLS policies.
+// Fetch aggregated assets/liabilities from Supabase.
 const useNetWorth = () => {
-  return useQuery(["net-worth"], async () => {
-    const { data: assets, error: assetsError } = await supabase
-      .from("assets")
-      .select("value")
-      .eq("user_id", supabase.auth.getUser().data?.user?.id ?? "");
-    const { data: liabilities, error: liabilitiesError } = await supabase
-      .from("liabilities")
-      .select("balance")
-      .eq("user_id", supabase.auth.getUser().data?.user?.id ?? "");
-    if (assetsError || liabilitiesError) {
-      throw assetsError || liabilitiesError;
-    }
-    const totalAssets = (assets ?? []).reduce((sum, a) => sum + a.value, 0);
-    const totalLiabilities = (liabilities ?? []).reduce(
-      (sum, l) => sum + l.balance,
-      0
-    );
-    return {
-      totalAssets,
-      totalLiabilities,
-      netWorth: totalAssets - totalLiabilities,
-    };
+  return useQuery({
+    queryKey: ["net-worth"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { data: assets, error: assetsError } = await supabase
+        .from("manual_assets")
+        .select("value")
+        .eq("user_id", user.id);
+      
+      const { data: liabilities, error: liabilitiesError } = await supabase
+        .from("manual_liabilities")
+        .select("balance")
+        .eq("user_id", user.id);
+        
+      if (assetsError || liabilitiesError) {
+        throw assetsError || liabilitiesError;
+      }
+      
+      const totalAssets = (assets ?? []).reduce((sum, a) => sum + (a.value || 0), 0);
+      const totalLiabilities = (liabilities ?? []).reduce(
+        (sum, l) => sum + (l.balance || 0),
+        0
+      );
+      
+      return {
+        totalAssets,
+        totalLiabilities,
+        netWorth: totalAssets - totalLiabilities,
+      };
+    },
   });
 };
 
-// Example hook for cash flow; adjust based on your schema
+// Mock cash flow data since cash_flow_view doesn't exist
 const useCashFlow = () => {
-  return useQuery(["cash-flow"], async () => {
-    const { data, error } = await supabase
-      .from("cash_flow_view")
-      .select("month, income, expenses")
-      .eq("user_id", supabase.auth.getUser().data?.user?.id ?? "");
-    if (error) throw error;
-    return data ?? [];
+  return useQuery({
+    queryKey: ["cash-flow"],
+    queryFn: async () => {
+      // Return mock data for now since cash_flow_view doesn't exist
+      return [
+        { month: "Jan", income: 5000, expenses: 3000 },
+        { month: "Feb", income: 5200, expenses: 3200 },
+        { month: "Mar", income: 4800, expenses: 2900 },
+        { month: "Abr", income: 5100, expenses: 3100 },
+        { month: "Mai", income: 5300, expenses: 3300 },
+        { month: "Jun", income: 5000, expenses: 3000 },
+      ];
+    },
   });
 };
 
