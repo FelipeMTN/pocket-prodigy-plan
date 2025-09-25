@@ -1,87 +1,61 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import {
-  Home,
-  DollarSign,
-  Target,
-  TrendingUp,
-  Bot,
-  Settings,
-} from "lucide-react";
+import React, { useState } from 'react';
+import { Home, DollarSign, Target, TrendingUp, Settings, Bot } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import EditableDashboard from './EditableDashboard';
+import Expenses from './Expenses';
+import Goals from './Goals';
+import Investments from './Investments';
+import AITab from './AITab';
+import More from './More';
 
-// Import your new page components below.  These should be implemented
-// separately to keep each tab focused and easy to maintain.
-import Dashboard from "./Dashboard";
-import ExpensesPage from "./ExpensesPage";
-import GoalsPage from "./GoalsPage";
-import InvestmentsPage from "./InvestmentsPage";
-import AITabPage from "./AITabPage";
-import MorePage from "./MorePage";
-
-interface TabDefinition {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  component: React.ComponentType;
-}
-
-const TABS: TabDefinition[] = [
-  { id: "inicio", label: "Início", icon: Home, component: Dashboard },
-  { id: "gastos", label: "Gastos", icon: DollarSign, component: ExpensesPage },
-  { id: "metas", label: "Metas", icon: Target, component: GoalsPage },
-  {
-    id: "investimentos",
-    label: "Investimentos",
-    icon: TrendingUp,
-    component: InvestmentsPage,
-  },
-  { id: "ia", label: "IA", icon: Bot, component: AITabPage },
-  { id: "mais", label: "Mais", icon: Settings, component: MorePage },
-];
-
-const Layout: React.FC = () => {
+const Layout = () => {
+  const [activeTab, setActiveTab] = useState('inicio');
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>("inicio");
 
-  // Redirect unauthenticated users to /auth
+  // Redirect to auth if not authenticated
   if (!loading && !user) {
-    navigate("/auth");
+    navigate('/auth');
     return null;
   }
 
-  // Show a spinner while we check authentication
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin h-8 w-8 rounded-full border-b-2 border-muted"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
   }
 
-  // Find the active tab component; default to Dashboard if none match
-  const ActiveComponent =
-    TABS.find((tab) => tab.id === activeTab)?.component ?? Dashboard;
+  const tabs = [
+    { id: 'inicio', label: 'Início', icon: Home, component: EditableDashboard },
+    { id: 'gastos', label: 'Gastos', icon: DollarSign, component: Expenses },
+    { id: 'metas', label: 'Metas', icon: Target, component: Goals },
+    { id: 'investimentos', label: 'Investimentos', icon: TrendingUp, component: Investments },
+    { id: 'ia', label: 'IA', icon: Bot, component: AITab },
+    { id: 'mais', label: 'Mais', icon: Settings, component: More },
+  ];
+
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EditableDashboard;
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Main Content */}
       <main className="min-h-screen pb-20">
         <ActiveComponent />
       </main>
+
+      {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 glass-nav px-2 py-2">
         <div className="flex justify-around max-w-lg mx-auto">
-          {TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-md transition-colors ${
-                activeTab === tab.id
-                  ? "bg-secondary/40 text-primary"
-                  : "text-muted-foreground hover:bg-secondary/20"
-              }`}
+              className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
             >
-              <tab.icon className="h-5 w-5" />
+              <tab.icon className="h-4 w-4 mb-0.5" />
               <span className="text-xs font-medium">{tab.label}</span>
             </button>
           ))}

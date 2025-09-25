@@ -1,230 +1,135 @@
-// New Dashboard.tsx implementing the "Home/Início" page following the desired
-// glassmorphism aesthetic.  This version focuses on summarising the user's
-// net worth and cash flow at a glance.  Detailed editing of assets and
-// liabilities should be moved into modals or separate pages to avoid
-// cluttering the dashboard.
+import { useState } from "react";
+import { Plus, TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react";
 
-import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { Home, Target, Settings } from "lucide-react";
-
-// Helper for formatting currency values
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    maximumFractionDigits: 2,
-  }).format(value);
-
-// Fetch aggregated assets/liabilities and cash flow from Supabase.
-// These queries should correspond to your tables and RLS policies.
-const useNetWorth = () => {
-  return useQuery({
-    queryKey: ["net-worth"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      
-      const { data: assets, error: assetsError } = await supabase
-        .from("manual_assets")
-        .select("value")
-        .eq("user_id", user.id);
-        
-      const { data: liabilities, error: liabilitiesError } = await supabase
-        .from("manual_liabilities")
-        .select("balance")
-        .eq("user_id", user.id);
-        
-      if (assetsError || liabilitiesError) {
-        throw assetsError || liabilitiesError;
-      }
-      
-      const totalAssets = (assets ?? []).reduce((sum, a) => sum + (a.value || 0), 0);
-      const totalLiabilities = (liabilities ?? []).reduce(
-        (sum, l) => sum + (l.balance || 0),
-        0
-      );
-      
-      return {
-        totalAssets,
-        totalLiabilities,
-        netWorth: totalAssets - totalLiabilities,
-      };
-    }
+const Dashboard = () => {
+  const [netWorth] = useState({
+    total: 540000,
+    assets: 540000,
+    liabilities: 214528,
+    change: 26660,
+    changePercent: 32.17
   });
-};
 
-// Example hook for cash flow; adjust based on your schema
-const useCashFlow = () => {
-  return useQuery({
-    queryKey: ["cash-flow"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      
-      // For now return empty array since we don't have cash flow view
-      // This can be replaced with actual expenses data later
-      return [];
-    }
-  });
-};
+  const [assets] = useState([
+    { name: "Imóveis", amount: 459000, percentage: 85, color: "from-blue-400 to-blue-600" },
+    { name: "Dinheiro", amount: 27000, percentage: 5, color: "from-green-400 to-green-600" },
+    { name: "Investimentos", amount: 54000, percentage: 10, color: "from-purple-400 to-purple-600" }
+  ]);
 
-const Dashboard: React.FC = () => {
-  const {
-    data: netWorthData,
-    isLoading: netWorthLoading,
-    error: netWorthError,
-  } = useNetWorth();
-  const {
-    data: cashFlowData,
-    isLoading: cashFlowLoading,
-    error: cashFlowError,
-  } = useCashFlow();
+  const [liabilities] = useState([
+    { name: "Cartões de Crédito", amount: 12853, percentage: 6, color: "from-red-400 to-red-600" },
+    { name: "Financiamento", amount: 201675, percentage: 94, color: "from-orange-400 to-orange-600" }
+  ]);
 
   return (
-    <div className="p-4 space-y-6">
-      {/* Net worth card */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle>Track your net worth</CardTitle>
-          <CardDescription>
-            Unite your financial life to see how your assets and liabilities change
-            over time.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {netWorthLoading ? (
-            <Skeleton className="h-12 w-48" />
-          ) : netWorthError ? (
-            <p className="text-destructive">Erro ao carregar dados.</p>
-          ) : netWorthData ? (
-            <div className="flex flex-col items-start gap-2">
-              <div className="text-3xl font-bold">
-                {formatCurrency(netWorthData.netWorth)}
+    <div className="min-h-screen gradient-blue relative overflow-hidden">
+      {/* Header */}
+      <div className="px-6 pt-16 pb-8 relative z-10">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="heading-display text-white italic">
+              Acompanhe seu patrimônio
+            </h1>
+            <p className="text-white/80 text-lg mt-2 max-w-xs leading-relaxed">
+              Una sua vida financeira para ver como seus ativos e passivos mudam ao longo do tempo.
+            </p>
+          </div>
+        </div>
+
+        {/* Connect Accounts Button */}
+        <button className="button-glass w-full py-4 mb-8 text-white font-semibold">
+          Conectar suas contas
+        </button>
+      </div>
+
+      {/* Main Content Card */}
+      <div className="px-6 space-y-6 relative z-10">
+        {/* Assets and Liabilities Overview */}
+        <div className="glass-card animate-fade-in">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-white/60 font-medium tracking-wider text-sm">ATIVOS E PASSIVOS</h3>
+              <Plus className="text-white/60" size={20} />
+            </div>
+
+            {/* Assets Section */}
+            <div className="mb-8">
+              <div className="flex justify-between items-baseline mb-4">
+                <h4 className="text-white font-medium">Ativos</h4>
+                <span className="text-white text-2xl font-semibold">
+                  ${netWorth.assets.toLocaleString()}
+                </span>
               </div>
-              <p className="text-muted-foreground text-sm">
-                Ativos: {formatCurrency(netWorthData.totalAssets)} • Passivos:
-                {" "}
-                {formatCurrency(netWorthData.totalLiabilities)}
-              </p>
+              
+              {assets.map((asset, index) => (
+                <div key={index} className="mb-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-white/80 text-sm">{asset.name} ({asset.percentage}%)</span>
+                  </div>
+                  <div className="progress-bar h-2">
+                    <div 
+                      className={`progress-fill bg-gradient-to-r ${asset.color}`}
+                      style={{ width: `${asset.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : null}
-          {/* Placeholder for future net worth chart */}
-          <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={[]}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" hide />
-                <YAxis hide />
-                <Tooltip />
-                <Area type="monotone" dataKey="netWorth" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-        <CardFooter className="justify-center">
-          <Button onClick={() => {/* open account linking modal */}}>
-            Conectar suas contas
-          </Button>
-        </CardFooter>
-      </Card>
 
-      {/* Cash flow card */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle>Track your spending</CardTitle>
-          <CardDescription>
-            Veja suas despesas e receitas claramente com AI que ajuda a manter o
-            controle.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {cashFlowLoading ? (
-            <Skeleton className="h-40 w-full" />
-          ) : cashFlowError ? (
-            <p className="text-destructive">Erro ao carregar dados.</p>
-          ) : (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={cashFlowData as any[]}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="income" fillOpacity={0.6} />
-                <Bar dataKey="expenses" fillOpacity={0.6} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-        <CardFooter className="justify-center">
-          <Button onClick={() => {/* open add expense dialog */}}>
-            Adicionar despesa
-          </Button>
-        </CardFooter>
-      </Card>
+            {/* Liabilities Section */}
+            <div>
+              <div className="flex justify-between items-baseline mb-4">
+                <h4 className="text-white font-medium">Passivos</h4>
+                <span className="text-white text-2xl font-semibold">
+                  ${netWorth.liabilities.toLocaleString()}
+                </span>
+              </div>
+              
+              {liabilities.map((liability, index) => (
+                <div key={index} className="mb-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-white/80 text-sm">{liability.name} ({liability.percentage}%)</span>
+                  </div>
+                  <div className="progress-bar h-2">
+                    <div 
+                      className={`progress-fill bg-gradient-to-r ${liability.color}`}
+                      style={{ width: `${liability.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
-      {/* Benefits section */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle>Benefícios</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-3">
-            <Home className="h-6 w-6" />
-            <div>
-              <p className="font-medium">Saiba seu patrimônio líquido futuro</p>
-              <p className="text-muted-foreground text-sm">
-                Veja como seu dinheiro cresce com o tempo e como grandes eventos
-                de vida o impactam.
-              </p>
+        {/* Net Worth Summary */}
+        <div className="glass-card animate-slide-up">
+          <div className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-white/60 text-sm font-medium">PATRIMÔNIO LÍQUIDO</h3>
+                <div className="text-white text-3xl font-semibold mt-1">
+                  ${(netWorth.assets - netWorth.liabilities).toLocaleString()}
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center text-green-400 text-sm">
+                  <TrendingUp size={16} className="mr-1" />
+                  +${netWorth.change.toLocaleString()} ({netWorth.changePercent}%)
+                </div>
+                <div className="text-white/60 text-xs mt-1">Últimos 6 meses</div>
+              </div>
             </div>
           </div>
-          <div className="flex items-start gap-3">
-            <Target className="h-6 w-6" />
-            <div>
-              <p className="font-medium">Planeje grandes eventos</p>
-              <p className="text-muted-foreground text-sm">
-                Modele mudanças como ter um filho ou mudar de trabalho e
-                compare cenários facilmente.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <Settings className="h-6 w-6" />
-            <div>
-              <p className="font-medium">Orientação profissional</p>
-              <p className="text-muted-foreground text-sm">
-                Planeje com confiança usando previsões baseadas em especialistas
-                que calculam suas chances de sucesso automaticamente.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="px-6 pt-8 pb-4">
+        <p className="text-white/80 text-center text-sm leading-relaxed">
+          Conecte com segurança todas suas contas correntes e poupanças para acompanhar suas finanças em um só lugar.
+        </p>
+      </div>
     </div>
   );
 };
