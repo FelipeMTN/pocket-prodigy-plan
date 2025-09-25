@@ -28,7 +28,7 @@ const Layout = () => {
       <div aria-hidden className="md:h-24 h-20" style={{ height: "calc(5rem + env(safe-area-inset-bottom))" }} />
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-[9999] safe-area-inset-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-30 safe-area-inset-bottom">
         <div className="max-w-md mx-auto">
           <div className="flex justify-between items-center">
             {tabs.map((tab) => {
