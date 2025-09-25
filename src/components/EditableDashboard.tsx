@@ -248,15 +248,15 @@ const EditableDashboard = () => {
   };
 
   const ViewToggle = () => (
-    <div className="flex bg-muted p-1 rounded-lg mb-4">
+    <div className="flex bg-white/10 p-1 rounded-lg mb-6 mx-4 backdrop-blur-sm">
       {(['overview', 'assets', 'liabilities'] as const).map((view) => (
         <button
           key={view}
           onClick={() => setSelectedView(view)}
-          className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
             selectedView === view
-              ? 'bg-background text-foreground shadow-sm'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-white/20 text-white shadow-lg backdrop-blur-sm'
+              : 'text-white/70 hover:text-white hover:bg-white/10'
           }`}
         >
           {view === 'overview' && 'Resumo'}
@@ -268,51 +268,51 @@ const EditableDashboard = () => {
   );
 
   const renderOverview = () => (
-    <div className="space-y-4">
+    <div className="px-4 space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <Card>
+        <Card className="glass-card border-white/10">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium">Ativos</span>
+              <TrendingUp className="w-4 h-4 text-green-400" />
+              <span className="text-sm font-medium text-white">Ativos</span>
             </div>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-green-400">
               R$ {totalAssets.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               {assets.length} {assets.length === 1 ? 'item' : 'itens'}
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card border-white/10">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-red-600" />
-              <span className="text-sm font-medium">Passivos</span>
+              <TrendingDown className="w-4 h-4 text-red-400" />
+              <span className="text-sm font-medium text-white">Passivos</span>
             </div>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-400">
               R$ {totalLiabilities.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               {liabilities.length} {liabilities.length === 1 ? 'item' : 'itens'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="glass-card border-white/10">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Patrimônio Líquido</CardTitle>
+          <CardTitle className="text-lg text-white">Patrimônio Líquido</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className={`text-3xl font-bold ${netWorth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <div className={`text-3xl font-bold ${netWorth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               R$ {Math.abs(netWorth).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               {netWorth < 0 && ' (Negativo)'}
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm text-white/80">
                 <span>Ativos: R$ {totalAssets.toLocaleString('pt-BR')}</span>
                 <span>Passivos: R$ {totalLiabilities.toLocaleString('pt-BR')}</span>
               </div>
@@ -327,27 +327,27 @@ const EditableDashboard = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <Card>
+        <Card className="glass-card border-white/10">
           <CardContent className="p-3 text-center">
-            <DollarSign className="w-6 h-6 mx-auto mb-1 text-primary" />
-            <p className="text-lg font-bold">{expenses.length}</p>
-            <p className="text-xs text-muted-foreground">Gastos</p>
+            <DollarSign className="w-6 h-6 mx-auto mb-1 text-blue-400" />
+            <p className="text-lg font-bold text-white">{expenses.length}</p>
+            <p className="text-xs text-white/60">Gastos</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass-card border-white/10">
           <CardContent className="p-3 text-center">
-            <TrendingUp className="w-6 h-6 mx-auto mb-1 text-primary" />
-            <p className="text-lg font-bold">{goals.length}</p>
-            <p className="text-xs text-muted-foreground">Metas</p>
+            <TrendingUp className="w-6 h-6 mx-auto mb-1 text-purple-400" />
+            <p className="text-lg font-bold text-white">{goals.length}</p>
+            <p className="text-xs text-white/60">Metas</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass-card border-white/10">
           <CardContent className="p-3 text-center">
-            <PiggyBank className="w-6 h-6 mx-auto mb-1 text-primary" />
-            <p className="text-lg font-bold">
+            <PiggyBank className="w-6 h-6 mx-auto mb-1 text-cyan-400" />
+            <p className="text-lg font-bold text-white">
               R$ {totalInvestments.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
             </p>
-            <p className="text-xs text-muted-foreground">Investimentos</p>
+            <p className="text-xs text-white/60">Investimentos</p>
           </CardContent>
         </Card>
       </div>
@@ -355,40 +355,41 @@ const EditableDashboard = () => {
   );
 
   const renderAssets = () => (
-    <div className="space-y-4">
+    <div className="px-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Meus Ativos</h3>
+        <h3 className="font-semibold text-white text-lg">Meus Ativos</h3>
         <Dialog open={isAddingAsset} onOpenChange={setIsAddingAsset}>
           <DialogTrigger asChild>
-            <Button size="sm" onClick={resetAssetForm}>
+            <Button size="sm" onClick={resetAssetForm} className="button-glass">
               <Plus className="w-4 h-4 mr-1" />
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="glass-card border-white/10">
             <DialogHeader>
-              <DialogTitle>{editingAsset ? 'Editar Ativo' : 'Adicionar Ativo'}</DialogTitle>
-              <DialogDescription>
-                {editingAsset ? 'Atualize as informações do ativo.' : 'Registre um novo ativo em seu patrimônio.'}
+              <DialogTitle className="text-white">Adicionar Ativo</DialogTitle>
+              <DialogDescription className="text-white/70">
+                Registre um novo ativo em seu patrimônio.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="asset-name">Nome</Label>
+                <Label htmlFor="asset-name" className="text-white">Nome</Label>
                 <Input
                   id="asset-name"
                   value={assetForm.name}
                   onChange={(e) => setAssetForm(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Ex: Conta corrente, Casa, Carro..."
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
               <div>
-                <Label htmlFor="asset-type">Tipo</Label>
+                <Label htmlFor="asset-type" className="text-white">Tipo</Label>
                 <Select value={assetForm.type} onValueChange={(value: any) => setAssetForm(prev => ({ ...prev, type: value }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/20">
                     <SelectItem value="cash">Dinheiro</SelectItem>
                     <SelectItem value="savings">Poupança</SelectItem>
                     <SelectItem value="real_estate">Imóvel</SelectItem>
@@ -398,28 +399,30 @@ const EditableDashboard = () => {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="asset-value">Valor (R$)</Label>
+                <Label htmlFor="asset-value" className="text-white">Valor (R$)</Label>
                 <Input
                   id="asset-value"
                   type="number"
                   step="0.01"
                   value={assetForm.value}
                   onChange={(e) => setAssetForm(prev => ({ ...prev, value: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
               <div>
-                <Label htmlFor="asset-description">Descrição (opcional)</Label>
+                <Label htmlFor="asset-description" className="text-white">Descrição (opcional)</Label>
                 <Textarea
                   id="asset-description"
                   value={assetForm.description}
                   onChange={(e) => setAssetForm(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Informações adicionais..."
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={editingAsset ? handleEditAsset : handleAddAsset}>
-                {editingAsset ? 'Atualizar' : 'Adicionar'}
+              <Button onClick={handleAddAsset} className="button-primary">
+                Adicionar
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -428,22 +431,22 @@ const EditableDashboard = () => {
 
       <div className="space-y-3">
         {assets.map((asset) => (
-          <Card key={asset.id} className="p-4">
+          <Card key={asset.id} className="glass-card border-white/10 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                {getAssetIcon(asset.type)}
+                <div className="text-white">{getAssetIcon(asset.type)}</div>
                 <div>
-                  <p className="font-medium">{asset.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-white">{asset.name}</p>
+                  <p className="text-sm text-white/70">
                     R$ {Number(asset.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => startEditAsset(asset)}>
+                <Button size="sm" variant="outline" onClick={() => startEditAsset(asset)} className="button-glass">
                   <Edit2 className="w-4 h-4" />
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleDeleteAsset(asset.id)}>
+                <Button size="sm" variant="outline" onClick={() => handleDeleteAsset(asset.id)} className="button-glass">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
@@ -452,9 +455,9 @@ const EditableDashboard = () => {
         ))}
         
         {assets.length === 0 && (
-          <Card className="p-8 text-center">
-            <p className="text-muted-foreground">Nenhum ativo registrado ainda.</p>
-            <p className="text-sm text-muted-foreground mt-1">Adicione seus ativos para começar.</p>
+          <Card className="glass-card border-white/10 p-8 text-center">
+            <p className="text-white/70">Nenhum ativo registrado ainda.</p>
+            <p className="text-sm text-white/50 mt-1">Adicione seus ativos para começar.</p>
           </Card>
         )}
       </div>
@@ -462,42 +465,43 @@ const EditableDashboard = () => {
   );
 
   const renderLiabilities = () => (
-    <div className="space-y-4">
+    <div className="px-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Meus Passivos</h3>
+        <h3 className="font-semibold text-white text-lg">Meus Passivos</h3>
         <Dialog open={isAddingLiability} onOpenChange={setIsAddingLiability}>
           <DialogTrigger asChild>
-            <Button size="sm" onClick={resetLiabilityForm}>
+            <Button size="sm" onClick={resetLiabilityForm} className="button-glass">
               <Plus className="w-4 h-4 mr-1" />
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="glass-card border-white/10">
             <DialogHeader>
-              <DialogTitle>{editingLiability ? 'Editar Passivo' : 'Adicionar Passivo'}</DialogTitle>
-              <DialogDescription>
-                {editingLiability ? 'Atualize as informações do passivo.' : 'Registre um novo passivo ou dívida.'}
+              <DialogTitle className="text-white">Adicionar Passivo</DialogTitle>
+              <DialogDescription className="text-white/70">
+                Registre um novo passivo ou dívida.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="liability-name">Nome</Label>
+                <Label htmlFor="liability-name" className="text-white">Nome</Label>
                 <Input
                   id="liability-name"
                   value={liabilityForm.name}
                   onChange={(e) => setLiabilityForm(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Ex: Cartão de crédito, Financiamento..."
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
               <div>
-                <Label htmlFor="liability-type">Tipo</Label>
+                <Label htmlFor="liability-type" className="text-white">Tipo</Label>
                 <Select value={liabilityForm.type} onValueChange={(value: any) => setLiabilityForm(prev => ({ ...prev, type: value }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mortgage">Financiamento Imobiliário</SelectItem>
-                    <SelectItem value="car_loan">Financiamento Veículo</SelectItem>
+                  <SelectContent className="bg-gray-900 border-white/20">
+                    <SelectItem value="mortgage">Hipoteca</SelectItem>
+                    <SelectItem value="car_loan">Financiamento de Carro</SelectItem>
                     <SelectItem value="credit_card">Cartão de Crédito</SelectItem>
                     <SelectItem value="personal_loan">Empréstimo Pessoal</SelectItem>
                     <SelectItem value="other">Outro</SelectItem>
@@ -505,50 +509,52 @@ const EditableDashboard = () => {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="liability-balance">Saldo devedor (R$)</Label>
+                <Label htmlFor="liability-balance" className="text-white">Saldo Devedor (R$)</Label>
                 <Input
                   id="liability-balance"
                   type="number"
                   step="0.01"
                   value={liabilityForm.balance}
                   onChange={(e) => setLiabilityForm(prev => ({ ...prev, balance: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="liability-rate">Taxa de juros (% a.m.)</Label>
-                  <Input
-                    id="liability-rate"
-                    type="number"
-                    step="0.01"
-                    value={liabilityForm.interest_rate}
-                    onChange={(e) => setLiabilityForm(prev => ({ ...prev, interest_rate: Number(e.target.value) }))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="liability-payment">Parcela mensal (R$)</Label>
-                  <Input
-                    id="liability-payment"
-                    type="number"
-                    step="0.01"
-                    value={liabilityForm.monthly_payment}
-                    onChange={(e) => setLiabilityForm(prev => ({ ...prev, monthly_payment: Number(e.target.value) }))}
-                  />
-                </div>
+              <div>
+                <Label htmlFor="liability-interest" className="text-white">Taxa de Juros (% ao ano)</Label>
+                <Input
+                  id="liability-interest"
+                  type="number"
+                  step="0.01"
+                  value={liabilityForm.interest_rate}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, interest_rate: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
               </div>
               <div>
-                <Label htmlFor="liability-description">Descrição (opcional)</Label>
+                <Label htmlFor="liability-payment" className="text-white">Pagamento Mensal (R$)</Label>
+                <Input
+                  id="liability-payment"
+                  type="number"
+                  step="0.01"
+                  value={liabilityForm.monthly_payment}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, monthly_payment: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="liability-description" className="text-white">Descrição (opcional)</Label>
                 <Textarea
                   id="liability-description"
                   value={liabilityForm.description}
                   onChange={(e) => setLiabilityForm(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Informações adicionais..."
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={editingLiability ? handleEditLiability : handleAddLiability}>
-                {editingLiability ? 'Atualizar' : 'Adicionar'}
+              <Button onClick={handleAddLiability} className="button-primary">
+                Adicionar
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -557,83 +563,213 @@ const EditableDashboard = () => {
 
       <div className="space-y-3">
         {liabilities.map((liability) => (
-          <Card key={liability.id} className="p-4">
+          <Card key={liability.id} className="glass-card border-white/10 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                {getLiabilityIcon(liability.type)}
+                <div className="text-white">{getLiabilityIcon(liability.type)}</div>
                 <div>
-                  <p className="font-medium">{liability.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-white">{liability.name}</p>
+                  <p className="text-sm text-white/70">
                     R$ {Number(liability.balance).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                   {liability.monthly_payment && (
-                    <p className="text-xs text-muted-foreground">
-                      Parcela: R$ {Number(liability.monthly_payment).toLocaleString('pt-BR')}
+                    <p className="text-xs text-white/50">
+                      Mensal: R$ {Number(liability.monthly_payment).toLocaleString('pt-BR')}
                     </p>
                   )}
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => startEditLiability(liability)}>
+                <Button size="sm" variant="outline" onClick={() => startEditLiability(liability)} className="button-glass">
                   <Edit2 className="w-4 h-4" />
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleDeleteLiability(liability.id)}>
+                <Button size="sm" variant="outline" onClick={() => handleDeleteLiability(liability.id)} className="button-glass">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </div>
           </Card>
         ))}
-        
+
         {liabilities.length === 0 && (
-          <Card className="p-8 text-center">
-            <p className="text-muted-foreground">Nenhum passivo registrado ainda.</p>
-            <p className="text-sm text-muted-foreground mt-1">Adicione suas dívidas para acompanhar seu patrimônio líquido.</p>
+          <Card className="glass-card border-white/10 p-8 text-center">
+            <p className="text-white/70">Nenhum passivo registrado ainda.</p>
+            <p className="text-sm text-white/50 mt-1">Adicione seus passivos para começar.</p>
           </Card>
         )}
       </div>
     </div>
   );
 
-  // Dialog for editing existing items
-  useEffect(() => {
-    if (editingAsset) {
-      setIsAddingAsset(true);
-    }
-  }, [editingAsset]);
-
-  useEffect(() => {
-    if (editingLiability) {
-      setIsAddingLiability(true);
-    }
-  }, [editingLiability]);
-
   if (assetsLoading || liabilitiesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center pb-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-500/20 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 pb-20">
-      <div className="max-w-md mx-auto p-4 space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Meu Patrimônio
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Gerencie seus ativos e passivos manualmente
-          </p>
-        </div>
-
-        <ViewToggle />
-
-        {selectedView === 'overview' && renderOverview()}
-        {selectedView === 'assets' && renderAssets()}
-        {selectedView === 'liabilities' && renderLiabilities()}
+    <div className="min-h-screen bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-500/20 p-4 space-y-6">
+      {/* Header */}
+      <div className="text-center text-white pt-8 pb-4">
+        <h1 className="text-3xl font-bold mb-2">Dashboard Financeiro</h1>
+        <p className="text-white/80">Gerencie seus ativos e passivos com controle total</p>
       </div>
+
+      <ViewToggle />
+
+      {selectedView === 'overview' && renderOverview()}
+      {selectedView === 'assets' && renderAssets()}
+      {selectedView === 'liabilities' && renderLiabilities()}
+
+      {/* Edit Asset Modal */}
+      {editingAsset && (
+        <Dialog open={!!editingAsset} onOpenChange={() => setEditingAsset(null)}>
+          <DialogContent className="glass-card border-white/10">
+            <DialogHeader>
+              <DialogTitle className="text-white">Editar Ativo</DialogTitle>
+              <DialogDescription className="text-white/70">
+                Atualize as informações do ativo selecionado.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-asset-name" className="text-white">Nome</Label>
+                <Input
+                  id="edit-asset-name"
+                  value={assetForm.name}
+                  onChange={(e) => setAssetForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-asset-type" className="text-white">Tipo</Label>
+                <Select value={assetForm.type} onValueChange={(value: any) => setAssetForm(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-900 border-white/20">
+                    <SelectItem value="cash">Dinheiro</SelectItem>
+                    <SelectItem value="savings">Poupança</SelectItem>
+                    <SelectItem value="real_estate">Imóvel</SelectItem>
+                    <SelectItem value="vehicle">Veículo</SelectItem>
+                    <SelectItem value="other">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-asset-value" className="text-white">Valor (R$)</Label>
+                <Input
+                  id="edit-asset-value"
+                  type="number"
+                  step="0.01"
+                  value={assetForm.value}
+                  onChange={(e) => setAssetForm(prev => ({ ...prev, value: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-asset-description" className="text-white">Descrição (opcional)</Label>
+                <Textarea
+                  id="edit-asset-description"
+                  value={assetForm.description}
+                  onChange={(e) => setAssetForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleEditAsset} className="button-primary">Atualizar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Edit Liability Modal */}
+      {editingLiability && (
+        <Dialog open={!!editingLiability} onOpenChange={() => setEditingLiability(null)}>
+          <DialogContent className="glass-card border-white/10">
+            <DialogHeader>
+              <DialogTitle className="text-white">Editar Passivo</DialogTitle>
+              <DialogDescription className="text-white/70">
+                Atualize as informações do passivo selecionado.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-liability-name" className="text-white">Nome</Label>
+                <Input
+                  id="edit-liability-name"
+                  value={liabilityForm.name}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-liability-type" className="text-white">Tipo</Label>
+                <Select value={liabilityForm.type} onValueChange={(value: any) => setLiabilityForm(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-900 border-white/20">
+                    <SelectItem value="mortgage">Hipoteca</SelectItem>
+                    <SelectItem value="car_loan">Financiamento de Carro</SelectItem>
+                    <SelectItem value="credit_card">Cartão de Crédito</SelectItem>
+                    <SelectItem value="personal_loan">Empréstimo Pessoal</SelectItem>
+                    <SelectItem value="other">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-liability-balance" className="text-white">Saldo Devedor (R$)</Label>
+                <Input
+                  id="edit-liability-balance"
+                  type="number"
+                  step="0.01"
+                  value={liabilityForm.balance}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, balance: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-liability-interest" className="text-white">Taxa de Juros (% ao ano)</Label>
+                <Input
+                  id="edit-liability-interest"
+                  type="number"
+                  step="0.01"
+                  value={liabilityForm.interest_rate}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, interest_rate: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-liability-payment" className="text-white">Pagamento Mensal (R$)</Label>
+                <Input
+                  id="edit-liability-payment"
+                  type="number"
+                  step="0.01"
+                  value={liabilityForm.monthly_payment}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, monthly_payment: Number(e.target.value) }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-liability-description" className="text-white">Descrição (opcional)</Label>
+                <Textarea
+                  id="edit-liability-description"
+                  value={liabilityForm.description}
+                  onChange={(e) => setLiabilityForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleEditLiability} className="button-primary">Atualizar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
