@@ -106,7 +106,7 @@ const Investments = () => {
         onAddStock={handleAddStock}
       />
       
-      <div className="min-h-screen gradient-green relative overflow-hidden">
+      <div className="min-h-screen gradient-invest-green relative overflow-hidden">
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <div className="mb-8">

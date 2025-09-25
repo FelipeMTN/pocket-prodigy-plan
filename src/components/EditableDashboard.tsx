@@ -603,14 +603,14 @@ const EditableDashboard = () => {
 
   if (assetsLoading || liabilitiesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-500/20 flex items-center justify-center">
+      <div className="min-h-screen gradient-home-blue flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-500/20 p-4 space-y-6">
+    <div className="min-h-screen gradient-home-blue p-4 space-y-6">
       {/* Header */}
       <div className="text-center text-white pt-8 pb-4">
         <h1 className="text-3xl font-bold mb-2">Dashboard Financeiro</h1>

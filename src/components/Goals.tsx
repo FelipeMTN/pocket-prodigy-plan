@@ -104,7 +104,7 @@ const Goals = () => {
         onUpdateGoal={handleUpdateGoal}
       />
       
-      <div className="min-h-screen gradient-purple relative overflow-hidden">
+      <div className="min-h-screen gradient-goals-dark relative overflow-hidden">
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <div className="mb-8">

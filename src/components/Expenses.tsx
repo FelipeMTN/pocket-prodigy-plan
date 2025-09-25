@@ -91,7 +91,7 @@ const Expenses = () => {
         expenses={expenses}
       />
       
-      <div className="min-h-screen gradient-warm relative overflow-hidden">
+      <div className="min-h-screen gradient-spend-tan relative overflow-hidden">
         {/* Header */}
         <div className="px-6 pt-16 pb-8 relative z-10">
           <div className="mb-8">

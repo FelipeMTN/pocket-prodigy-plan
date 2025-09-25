@@ -40,7 +40,7 @@ const Layout = () => {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EditableDashboard;
 
   return (
-    <div className="min-h-screen gradient-warm-main">
+    <div className="min-h-screen">
       {/* Main Content */}
       <main className="min-h-screen pb-20">
         <ActiveComponent />
