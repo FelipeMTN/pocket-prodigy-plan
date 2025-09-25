@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Plus, TrendingUp, TrendingDown, Trash2, BarChart3, PieChart } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, Trash2, BarChart3, PieChart, Search } from "lucide-react";
 import AddStockModal from "./AddStockModal";
+import StockSearchModal from "./StockSearchModal";
 import { useInvestments } from "@/hooks/useSupabaseData";
 import { useToast } from "@/hooks/use-toast";
 
 const Investments = () => {
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'portfolio' | 'analytics'>('portfolio');
   const { investments, loading, addInvestment, deleteInvestment } = useInvestments();
   const { toast } = useToast();
@@ -92,10 +94,16 @@ const Investments = () => {
 
   return (
     <>
-      <AddStockModal
+      <AddStockModal 
         isOpen={isStockModalOpen}
         onClose={() => setIsStockModalOpen(false)}
         onAdd={handleAddStock}
+      />
+      
+      <StockSearchModal 
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        onAddStock={handleAddStock}
       />
       
       <div className="min-h-screen gradient-green relative overflow-hidden">
@@ -111,13 +119,19 @@ const Investments = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-4 mb-8">
+        <div className="flex space-x-3 mb-8">
+          <button 
+            onClick={() => setIsSearchModalOpen(true)}
+            className="button-glass px-6 py-3 text-white font-semibold flex-1"
+          >
+            <Search className="mr-2" size={20} />
+            Buscar Ações
+          </button>
           <button 
             onClick={() => setIsStockModalOpen(true)}
-            className="button-glass flex-1 py-4 text-white font-semibold flex items-center justify-center"
+            className="button-glass px-4 py-3 text-white"
           >
-            <Plus className="mr-2" size={20} />
-            Adicionar ao Portfólio
+            <Plus size={20} />
           </button>
         </div>
 

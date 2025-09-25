@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { Home, CreditCard, TrendingUp, Target, Settings } from "lucide-react";
-import Dashboard from "./Dashboard";
+import EnhancedDashboard from "./EnhancedDashboard";
 import Expenses from "./Expenses";
 import Investments from "./Investments";
 import Goals from "./Goals";
+import More from "./More";
 
 const Layout = () => {
   const [activeTab, setActiveTab] = useState("home");
 
   const tabs = [
-    { id: "home", label: "INÍCIO", icon: Home, component: Dashboard },
+    { id: "home", label: "INÍCIO", icon: Home, component: EnhancedDashboard },
     { id: "spend", label: "GASTOS", icon: CreditCard, component: Expenses },
     { id: "invest", label: "INVESTIR", icon: TrendingUp, component: Investments },
     { id: "goals", label: "METAS", icon: Target, component: Goals },
-    { id: "settings", label: "MAIS", icon: Settings, component: Dashboard },
+    { id: "settings", label: "MAIS", icon: Settings, component: More },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || Dashboard;
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EnhancedDashboard;
 
   return (
     <div className="min-h-screen w-full bg-background overflow-hidden touch-manipulation">
