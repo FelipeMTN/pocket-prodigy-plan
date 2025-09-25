@@ -21,9 +21,11 @@ const Layout = () => {
   return (
     <div className="min-h-screen w-full bg-background overflow-hidden touch-manipulation">
       {/* Main Content */}
-      <main className="pb-32 min-h-screen">
+      <main className="min-h-screen">
         <ActiveComponent />
       </main>
+      {/* Spacer to prevent overlap with bottom nav */}
+      <div aria-hidden className="md:h-24 h-20" style={{ height: "calc(5rem + env(safe-area-inset-bottom))" }} />
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 glass-nav px-4 py-3 z-[9999] safe-area-inset-bottom">
