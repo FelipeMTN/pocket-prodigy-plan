@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_chat_history: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          response: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          response: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          response?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       expenses: {
         Row: {
           amount: number
@@ -122,6 +146,138 @@ export type Database = {
           ticker?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      manual_assets: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          type: string
+          updated_at: string | null
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+          value?: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      manual_liabilities: {
+        Row: {
+          balance: number
+          created_at: string | null
+          description: string | null
+          id: string
+          interest_rate: number | null
+          monthly_payment: number | null
+          name: string
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          interest_rate?: number | null
+          monthly_payment?: number | null
+          name: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          interest_rate?: number | null
+          monthly_payment?: number | null
+          name?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      partnerships: {
+        Row: {
+          created_at: string | null
+          id: string
+          invited_by: string
+          status: string
+          updated_at: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          invited_by: string
+          status?: string
+          updated_at?: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          invited_by?: string
+          status?: string
+          updated_at?: string | null
+          user1_id?: string
+          user2_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          currency: string | null
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
