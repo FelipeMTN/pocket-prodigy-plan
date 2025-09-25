@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Home, DollarSign, Target, TrendingUp, Settings, Bot } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import EditableDashboard from './EditableDashboard';
-import Expenses from './Expenses';
-import Goals from './Goals';
-import Investments from './Investments';
-import AITab from './AITab';
-import More from './More';
+import Dashboard from './Dashboard';
+import ExpensesPage from './ExpensesPage';
+import GoalsPage from './GoalsPage';
+import InvestmentsPage from './InvestmentsPage';
+import AITabPage from './AITabPage';
+import MorePage from './MorePage';
 
 const Layout = () => {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -29,15 +29,15 @@ const Layout = () => {
   }
 
   const tabs = [
-    { id: 'inicio', label: 'Início', icon: Home, component: EditableDashboard },
-    { id: 'gastos', label: 'Gastos', icon: DollarSign, component: Expenses },
-    { id: 'metas', label: 'Metas', icon: Target, component: Goals },
-    { id: 'investimentos', label: 'Investimentos', icon: TrendingUp, component: Investments },
-    { id: 'ia', label: 'IA', icon: Bot, component: AITab },
-    { id: 'mais', label: 'Mais', icon: Settings, component: More },
+    { id: 'inicio', label: 'Início', icon: Home, component: Dashboard },
+    { id: 'gastos', label: 'Gastos', icon: DollarSign, component: ExpensesPage },
+    { id: 'metas', label: 'Metas', icon: Target, component: GoalsPage },
+    { id: 'investimentos', label: 'Investimentos', icon: TrendingUp, component: InvestmentsPage },
+    { id: 'ia', label: 'IA', icon: Bot, component: AITabPage },
+    { id: 'mais', label: 'Mais', icon: Settings, component: MorePage },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EditableDashboard;
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || Dashboard;
 
   return (
     <div className="min-h-screen bg-background">
