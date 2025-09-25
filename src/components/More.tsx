@@ -1,12 +1,19 @@
 import { useState } from "react";
-import { User, Settings, Download, Upload, Bell, Shield, HelpCircle, LogOut } from "lucide-react";
+import { User, Settings, Download, Upload, Bell, Shield, HelpCircle, LogOut, UserPlus, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import ProfileModal from "./ProfileModal";
+import PreferencesModal from "./PreferencesModal";
+import DataManagementModal from "./DataManagementModal";
+import InvitePartnerModal from "./InvitePartnerModal";
+import HelpSupportModal from "./HelpSupportModal";
 
 const More = () => {
   const { toast } = useToast();
+  const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState({
     expenses: true,
     goals: true,
@@ -14,46 +21,109 @@ const More = () => {
     aiAgent: true
   });
 
-  const handleExportData = () => {
-    toast({
-      title: "Exportando dados",
-      description: "Seus dados serão exportados em breve",
-    });
+  // Modal states
+  const [modals, setModals] = useState({
+    profile: false,
+    preferences: false,
+    exportData: false,
+    importData: false,
+    invitePartner: false,
+    help: false,
+    support: false
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals({ ...modals, [modalName]: true });
   };
 
-  const handleImportData = () => {
-    toast({
-      title: "Importar dados",
-      description: "Selecione um arquivo para importar",
-    });
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals({ ...modals, [modalName]: false });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Logout realizado",
+        description: "Você foi desconectado com sucesso",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível fazer logout. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   const menuSections = [
     {
       title: "Perfil",
       items: [
-        { icon: User, label: "Informações Pessoais", action: () => {} },
-        { icon: Settings, label: "Preferências", action: () => {} }
+        { icon: User, label: "Informações Pessoais", action: () => openModal('profile') },
+        { icon: Settings, label: "Preferências", action: () => openModal('preferences') }
       ]
     },
     {
       title: "Dados",
       items: [
-        { icon: Download, label: "Exportar Dados", action: handleExportData },
-        { icon: Upload, label: "Importar Dados", action: handleImportData }
+        { icon: Download, label: "Exportar Dados", action: () => openModal('exportData') },
+        { icon: Upload, label: "Importar Dados", action: () => openModal('importData') }
+      ]
+    },
+    {
+      title: "Colaboração",
+      items: [
+        { icon: UserPlus, label: "Convidar Parceiro", action: () => openModal('invitePartner') },
+        { icon: Users, label: "Gerenciar Parcerias", action: () => toast({ title: "Em breve", description: "Esta funcionalidade estará disponível em breve!" }) }
       ]
     },
     {
       title: "Suporte",
       items: [
-        { icon: HelpCircle, label: "Central de Ajuda", action: () => {} },
-        { icon: Shield, label: "Privacidade", action: () => {} }
+        { icon: HelpCircle, label: "Central de Ajuda", action: () => openModal('help') },
+        { icon: Shield, label: "Suporte Técnico", action: () => openModal('support') }
       ]
     }
   ];
 
   return (
-    <div className="min-h-screen gradient-blue relative overflow-hidden">
+    <>
+      {/* Modals */}
+      <ProfileModal 
+        isOpen={modals.profile} 
+        onClose={() => closeModal('profile')} 
+      />
+      <PreferencesModal 
+        isOpen={modals.preferences} 
+        onClose={() => closeModal('preferences')} 
+      />
+      <DataManagementModal 
+        isOpen={modals.exportData} 
+        onClose={() => closeModal('exportData')} 
+        type="export" 
+      />
+      <DataManagementModal 
+        isOpen={modals.importData} 
+        onClose={() => closeModal('importData')} 
+        type="import" 
+      />
+      <InvitePartnerModal 
+        isOpen={modals.invitePartner} 
+        onClose={() => closeModal('invitePartner')} 
+      />
+      <HelpSupportModal 
+        isOpen={modals.help} 
+        onClose={() => closeModal('help')} 
+        type="help" 
+      />
+      <HelpSupportModal 
+        isOpen={modals.support} 
+        onClose={() => closeModal('support')} 
+        type="support" 
+      />
+
+      <div className="min-h-screen gradient-blue relative overflow-hidden">
       {/* Header */}
       <div className="px-6 pt-16 pb-8 relative z-10">
         <h1 className="heading-display text-white italic mb-2">
@@ -75,11 +145,16 @@ const More = () => {
                 <User size={24} className="text-white" />
               </div>
               <div>
-                <h3 className="text-white text-xl font-semibold">Usuário</h3>
-                <p className="text-white/60 text-sm">usuario@exemplo.com</p>
+                <h3 className="text-white text-xl font-semibold">
+                  {user?.email?.split('@')[0] || 'Usuário'}
+                </h3>
+                <p className="text-white/60 text-sm">{user?.email || 'usuario@exemplo.com'}</p>
               </div>
             </div>
-            <Button className="w-full bg-white/10 hover:bg-white/20 text-white border-white/20">
+            <Button 
+              onClick={() => openModal('profile')}
+              className="w-full bg-white/10 hover:bg-white/20 text-white border-white/20"
+            >
               Editar Perfil
             </Button>
           </div>
@@ -125,13 +200,13 @@ const More = () => {
                   <button
                     key={itemIndex}
                     onClick={item.action}
-                    className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                    className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
                   >
                     <div className="flex items-center space-x-3">
-                      <item.icon size={20} className="text-white/80" />
-                      <span className="text-white">{item.label}</span>
+                      <item.icon size={20} className="text-white/80 group-hover:text-white transition-colors" />
+                      <span className="text-white group-hover:text-white/90 transition-colors">{item.label}</span>
                     </div>
-                    <div className="w-2 h-2 bg-white/40 rounded-full" />
+                    <div className="w-2 h-2 bg-white/40 rounded-full group-hover:bg-white/60 transition-colors" />
                   </button>
                 ))}
               </div>
@@ -144,8 +219,8 @@ const More = () => {
           <div className="p-6">
             <Button 
               variant="destructive" 
-              className="w-full flex items-center justify-center space-x-2"
-              onClick={() => toast({ title: "Logout realizado", description: "Você foi desconectado" })}
+              className="w-full flex items-center justify-center space-x-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300 border-red-500/30"
+              onClick={handleLogout}
             >
               <LogOut size={20} />
               <span>Sair da Conta</span>
@@ -154,6 +229,7 @@ const More = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
