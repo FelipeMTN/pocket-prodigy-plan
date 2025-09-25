@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
 
 // Hook for expenses data
 export const useExpenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchExpenses = async () => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('expenses')
         .select('*')
+        .eq('user_id', user.id)
         .order('date', { ascending: false });
       
       if (error) throw error;
@@ -23,10 +27,11 @@ export const useExpenses = () => {
   };
 
   const addExpense = async (expense: any) => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('expenses')
-        .insert([expense])
+        .insert([{ ...expense, user_id: user.id }])
         .select()
         .single();
       
@@ -40,11 +45,13 @@ export const useExpenses = () => {
   };
 
   const deleteExpense = async (id: string) => {
+    if (!user) return;
     try {
       const { error } = await supabase
         .from('expenses')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
       
       if (error) throw error;
       setExpenses(prev => prev.filter(exp => exp.id !== id));
@@ -56,7 +63,7 @@ export const useExpenses = () => {
 
   useEffect(() => {
     fetchExpenses();
-  }, []);
+  }, [user]);
 
   return { expenses, loading, addExpense, deleteExpense, refetch: fetchExpenses };
 };
@@ -65,12 +72,15 @@ export const useExpenses = () => {
 export const useGoals = () => {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchGoals = async () => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('goals')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -83,10 +93,11 @@ export const useGoals = () => {
   };
 
   const addGoal = async (goal: any) => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('goals')
-        .insert([goal])
+        .insert([{ ...goal, user_id: user.id }])
         .select()
         .single();
       
@@ -100,11 +111,13 @@ export const useGoals = () => {
   };
 
   const updateGoal = async (id: string, updates: any) => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('goals')
         .update(updates)
         .eq('id', id)
+        .eq('user_id', user.id)
         .select()
         .single();
       
@@ -118,11 +131,13 @@ export const useGoals = () => {
   };
 
   const deleteGoal = async (id: string) => {
+    if (!user) return;
     try {
       const { error } = await supabase
         .from('goals')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
       
       if (error) throw error;
       setGoals(prev => prev.filter(goal => goal.id !== id));
@@ -134,7 +149,7 @@ export const useGoals = () => {
 
   useEffect(() => {
     fetchGoals();
-  }, []);
+  }, [user]);
 
   return { goals, loading, addGoal, updateGoal, deleteGoal, refetch: fetchGoals };
 };
@@ -143,12 +158,15 @@ export const useGoals = () => {
 export const useInvestments = () => {
   const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchInvestments = async () => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('investments')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -161,10 +179,11 @@ export const useInvestments = () => {
   };
 
   const addInvestment = async (investment: any) => {
+    if (!user) return;
     try {
       const { data, error } = await supabase
         .from('investments')
-        .insert([investment])
+        .insert([{ ...investment, user_id: user.id }])
         .select()
         .single();
       
@@ -178,11 +197,13 @@ export const useInvestments = () => {
   };
 
   const deleteInvestment = async (id: string) => {
+    if (!user) return;
     try {
       const { error } = await supabase
         .from('investments')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
       
       if (error) throw error;
       setInvestments(prev => prev.filter(inv => inv.id !== id));
@@ -194,7 +215,7 @@ export const useInvestments = () => {
 
   useEffect(() => {
     fetchInvestments();
-  }, []);
+  }, [user]);
 
   return { investments, loading, addInvestment, deleteInvestment, refetch: fetchInvestments };
 };
