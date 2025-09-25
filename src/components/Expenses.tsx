@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import AddExpenseModal from "./AddExpenseModal";
+import ExpenseListModal from "./ExpenseListModal";
+import BudgetDetailModal from "./BudgetDetailModal";
+import { useExpenses } from "@/hooks/useSupabaseData";
+import { useToast } from "@/hooks/use-toast";
 
 const Expenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [expenses, setExpenses] = useState([
-    { id: 1, amount: 45.67, category: "food", description: "Almoço no café", date: "2024-01-15" },
-    { id: 2, amount: 120.00, category: "transport", description: "Posto de gasolina", date: "2024-01-14" },
-    { id: 3, amount: 85.50, category: "shopping", description: "Supermercado", date: "2024-01-13" }
-  ]);
+  const [isExpenseListOpen, setIsExpenseListOpen] = useState(false);
+  const [isBudgetDetailOpen, setIsBudgetDetailOpen] = useState(false);
+  const [isBudgetExpanded, setIsBudgetExpanded] = useState(false);
+  const { expenses, loading, addExpense, deleteExpense } = useExpenses();
+  const { toast } = useToast();
 
   const [budget] = useState({
     totalSpent: 5070,
@@ -36,12 +40,36 @@ const Expenses = () => {
     ]
   });
 
-  const handleAddExpense = (expense: any) => {
-    const newExpense = {
-      ...expense,
-      id: Date.now() + Math.random(), // Ensure unique ID
-    };
-    setExpenses(prev => [newExpense, ...prev]);
+  const handleAddExpense = async (expense: any) => {
+    try {
+      await addExpense(expense);
+      toast({
+        title: "Gasto adicionado",
+        description: "Seu gasto foi registrado com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível adicionar o gasto. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteExpense = async (id: string) => {
+    try {
+      await deleteExpense(id);
+      toast({
+        title: "Gasto removido",
+        description: "O gasto foi excluído com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover o gasto. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -50,6 +78,17 @@ const Expenses = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddExpense}
+      />
+      <ExpenseListModal
+        isOpen={isExpenseListOpen}
+        onClose={() => setIsExpenseListOpen(false)}
+        expenses={expenses}
+        onDeleteExpense={handleDeleteExpense}
+      />
+      <BudgetDetailModal
+        isOpen={isBudgetDetailOpen}
+        onClose={() => setIsBudgetDetailOpen(false)}
+        expenses={expenses}
       />
       
       <div className="min-h-screen gradient-warm relative overflow-hidden">
@@ -92,7 +131,10 @@ const Expenses = () => {
                   ))}
                 </div>
                 {expenses.length > 3 && (
-                  <button className="text-primary text-sm mt-3 font-medium">
+                  <button 
+                    onClick={() => setIsExpenseListOpen(true)}
+                    className="text-primary text-sm mt-3 font-medium hover:text-primary-light transition-colors"
+                  >
                     Ver todos os gastos ({expenses.length})
                   </button>
                 )}
@@ -107,7 +149,22 @@ const Expenses = () => {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-white/60 font-medium tracking-wider text-sm">ORÇAMENTO</h3>
-                <ArrowRight className="text-white/60" size={20} />
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setIsBudgetDetailOpen(true)}
+                    className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                    title="Ver detalhes completos"
+                  >
+                    <ArrowRight size={20} />
+                  </button>
+                  <button
+                    onClick={() => setIsBudgetExpanded(!isBudgetExpanded)}
+                    className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                    title={isBudgetExpanded ? "Recolher" : "Expandir"}
+                  >
+                    {isBudgetExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  </button>
+                </div>
               </div>
 
               {/* Total Budget */}
@@ -130,25 +187,41 @@ const Expenses = () => {
               </div>
 
               {/* Category Breakdown */}
-              <div className="space-y-4">
-                {budget.categories.map((category, index) => (
-                  <div key={index}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <span className="mr-3 text-lg">{category.icon}</span>
-                        <span className="text-white font-medium">{category.name}</span>
+              {isBudgetExpanded && (
+                <div className="space-y-4 animate-fade-in">
+                  <div className="border-t border-white/10 pt-4">
+                    <h4 className="text-white/80 font-medium mb-3 text-sm">BREAKDOWN POR CATEGORIA</h4>
+                    {budget.categories.map((category, index) => (
+                      <div key={index} className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            <span className="mr-3 text-lg">{category.icon}</span>
+                            <span className="text-white font-medium">{category.name}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-white font-semibold text-sm">
+                              ${category.spent.toLocaleString()} / ${category.budget.toLocaleString()}
+                            </span>
+                            <div className="text-white/80 text-xs">{category.percentage}%</div>
+                          </div>
+                        </div>
+                        <div className="progress-bar h-2">
+                          <div 
+                            className="progress-fill bg-gradient-to-r from-orange-300 to-orange-500"
+                            style={{ width: `${category.percentage}%` }}
+                          />
+                        </div>
+                        <div className="flex justify-between text-xs text-white/60 mt-1">
+                          <span>Restante: ${(category.budget - category.spent).toLocaleString()}</span>
+                          <span className={category.percentage > 90 ? 'text-red-400' : category.percentage > 70 ? 'text-yellow-400' : 'text-green-400'}>
+                            {category.percentage > 90 ? 'Atenção!' : category.percentage > 70 ? 'Cuidado' : 'No limite'}
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-white/80 text-sm">{category.percentage}%</span>
-                    </div>
-                    <div className="progress-bar h-2">
-                      <div 
-                        className="progress-fill bg-gradient-to-r from-orange-300 to-orange-500"
-                        style={{ width: `${category.percentage}%` }}
-                      />
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           </div>
 

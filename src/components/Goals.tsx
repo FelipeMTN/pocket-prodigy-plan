@@ -1,74 +1,93 @@
 import { useState } from "react";
 import { Plus, Target, Calendar, DollarSign, Edit3, Trash2 } from "lucide-react";
 import AddGoalModal from "./AddGoalModal";
+import GoalDetailModal from "./GoalDetailModal";
+import { useGoals } from "@/hooks/useSupabaseData";
+import { useToast } from "@/hooks/use-toast";
 
 const Goals = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [goals, setGoals] = useState([
-    {
-      id: 1,
-      title: "Reserva de Emergência",
-      target: 15000,
-      current: 8500,
-      deadline: "Dez 2024",
-      category: "Segurança",
-      color: "from-blue-400 to-blue-600",
-      monthlyTarget: 650
-    },
-    {
-      id: 2,
-      title: "Notebook Novo",
-      target: 3000,
-      current: 1200,
-      deadline: "Ago 2024",
-      category: "Tecnologia",
-      color: "from-purple-400 to-purple-600",
-      monthlyTarget: 450
-    },
-    {
-      id: 3,
-      title: "Viagem para Europa",
-      target: 8000,
-      current: 3200,
-      deadline: "Jun 2025",
-      category: "Viagem",
-      color: "from-green-400 to-green-600",
-      monthlyTarget: 400
-    },
-    {
-      id: 4,
-      title: "Entrada da Casa",
-      target: 50000,
-      current: 22000,
-      deadline: "Dez 2025",
-      category: "Casa",
-      color: "from-orange-400 to-orange-600",
-      monthlyTarget: 2334
-    }
-  ]);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [isGoalDetailOpen, setIsGoalDetailOpen] = useState(false);
+  const { goals, loading, addGoal, updateGoal, deleteGoal } = useGoals();
+  const { toast } = useToast();
 
-  const totalSaved = goals.reduce((sum, goal) => sum + goal.current, 0);
-  const totalTarget = goals.reduce((sum, goal) => sum + goal.target, 0);
+  const totalSaved = goals.reduce((sum, goal) => sum + parseFloat(goal.current_amount || 0), 0);
+  const totalTarget = goals.reduce((sum, goal) => sum + parseFloat(goal.target_amount || 0), 0);
   const overallProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
+  const completedGoals = goals.filter(goal => parseFloat(goal.current_amount) >= parseFloat(goal.target_amount)).length;
 
-  const handleAddGoal = (goal: any) => {
-    const newGoal = {
-      ...goal,
-      id: Date.now() + Math.random(), // Ensure unique ID
-    };
-    setGoals(prev => [...prev, newGoal]);
+  const handleAddGoal = async (goalData: any) => {
+    try {
+      await addGoal(goalData);
+      toast({
+        title: "Meta criada",
+        description: "Sua nova meta foi criada com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível criar a meta. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteGoal = (goalId: number) => {
-    setGoals(prev => prev.filter(goal => goal.id !== goalId));
+  const handleDeleteGoal = async (goalId: string) => {
+    try {
+      await deleteGoal(goalId);
+      toast({
+        title: "Meta removida",
+        description: "A meta foi excluída com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover a meta. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleAddToGoal = (goalId: number, amount: number) => {
-    setGoals(prev => prev.map(goal => 
-      goal.id === goalId 
-        ? { ...goal, current: Math.min(goal.current + amount, goal.target) }
-        : goal
-    ));
+  const handleAddToGoal = async (goalId: string, amount: number) => {
+    const goal = goals.find(g => g.id === goalId);
+    if (goal) {
+      const newAmount = Math.min(parseFloat(goal.current_amount) + amount, parseFloat(goal.target_amount));
+      try {
+        await updateGoal(goalId, { current_amount: newAmount });
+        toast({
+          title: "Contribuição adicionada",
+          description: `R$ ${amount.toFixed(2)} foi adicionado à sua meta!`,
+        });
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível adicionar a contribuição. Tente novamente.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleGoalClick = (goal: any) => {
+    setSelectedGoal(goal);
+    setIsGoalDetailOpen(true);
+  };
+
+  const handleUpdateGoal = async (id: string, updates: any) => {
+    try {
+      await updateGoal(id, updates);
+      toast({
+        title: "Meta atualizada",
+        description: "As alterações foram salvas com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar a meta. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -77,6 +96,12 @@ const Goals = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddGoal}
+      />
+      <GoalDetailModal
+        isOpen={isGoalDetailOpen}
+        onClose={() => setIsGoalDetailOpen(false)}
+        goal={selectedGoal}
+        onUpdateGoal={handleUpdateGoal}
       />
       
       <div className="min-h-screen gradient-purple relative overflow-hidden">
@@ -131,11 +156,11 @@ const Goals = () => {
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-white/5 rounded-lg p-3">
                 <div className="text-white/60 text-sm">Metas Alcançadas</div>
-                <div className="text-white text-xl font-semibold">0</div>
+                <div className="text-white text-xl font-semibold">{completedGoals}</div>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
                 <div className="text-white/60 text-sm">Metas Ativas</div>
-                <div className="text-white text-xl font-semibold">{goals.length}</div>
+                <div className="text-white text-xl font-semibold">{goals.length - completedGoals}</div>
               </div>
             </div>
           </div>
@@ -143,11 +168,15 @@ const Goals = () => {
 
         {/* Individual Goals */}
         {goals.map((goal, index) => {
-          const progress = (goal.current / goal.target) * 100;
-          const remaining = goal.target - goal.current;
+          const progress = (parseFloat(goal.current_amount) / parseFloat(goal.target_amount)) * 100;
+          const remaining = parseFloat(goal.target_amount) - parseFloat(goal.current_amount);
+          const monthsLeft = goal.deadline ? Math.max(1, Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30))) : 1;
+          const monthlyTarget = remaining / monthsLeft;
           
           return (
-            <div key={goal.id} className="glass-card animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+            <div key={goal.id} className="glass-card animate-slide-up cursor-pointer hover:bg-white/10 transition-all" 
+                 style={{ animationDelay: `${index * 100}ms` }}
+                 onClick={() => handleGoalClick(goal)}>
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
@@ -156,7 +185,7 @@ const Goals = () => {
                         <h4 className="text-white font-semibold text-lg">{goal.title}</h4>
                         <div className="flex items-center text-white/60 text-sm mt-1">
                           <Calendar className="mr-1" size={14} />
-                          <span className="mr-3">{goal.deadline}</span>
+                          <span className="mr-3">{goal.deadline ? new Date(goal.deadline).toLocaleDateString('pt-BR') : 'Sem prazo'}</span>
                           <span className="px-2 py-1 bg-white/10 rounded-full text-xs">
                             {goal.category}
                           </span>
@@ -181,10 +210,10 @@ const Goals = () => {
                     </div>
                     <div className="text-right mt-2">
                       <div className="text-white font-semibold">
-                        ${goal.current.toLocaleString()}
+                        R$ {parseFloat(goal.current_amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </div>
                       <div className="text-white/60 text-sm">
-                        of ${goal.target.toLocaleString()}
+                        de R$ {parseFloat(goal.target_amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </div>
                     </div>
                   </div>
@@ -194,7 +223,7 @@ const Goals = () => {
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-white/80">{progress.toFixed(1)}% completo</span>
-                    <span className="text-white/80">R${remaining.toLocaleString()} restante</span>
+                    <span className="text-white/80">R$ {remaining.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} restante</span>
                   </div>
                   <div className="progress-bar h-3">
                     <div 
@@ -212,7 +241,7 @@ const Goals = () => {
                       Meta mensal para alcançar objetivo
                     </div>
                     <span className="text-white font-semibold">
-                      R${goal.monthlyTarget.toLocaleString()}
+                      R$ {monthlyTarget.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Plus, TrendingUp, TrendingDown, Trash2 } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, Trash2, BarChart3, PieChart } from "lucide-react";
 import AddStockModal from "./AddStockModal";
+import { useInvestments } from "@/hooks/useSupabaseData";
+import { useToast } from "@/hooks/use-toast";
 
 const Investments = () => {
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
-  const [portfolio, setPortfolio] = useState([
-    { id: 1, ticker: "PETR4.SA", name: "Petrobras", shares: 100, price: 28.45, sector: "Energy", change: 1.2 },
-    { id: 2, ticker: "AAPL", name: "Apple Inc.", shares: 10, price: 189.25, sector: "Technology", change: 1.8 },
-    { id: 3, ticker: "VALE3.SA", name: "Vale", shares: 50, price: 65.80, sector: "Materials", change: -0.8 }
-  ]);
+  const [viewMode, setViewMode] = useState<'portfolio' | 'analytics'>('portfolio');
+  const { investments, loading, addInvestment, deleteInvestment } = useInvestments();
+  const { toast } = useToast();
   const [allocations] = useState({
     allocations: [
       { name: "Ações EUA", current: 40.2, target: 56, color: "from-blue-400 to-blue-600" },
@@ -43,19 +43,52 @@ const Investments = () => {
     { bank: "Bradesco", rate: 85, highlight: false, conditions: "Traditional bank" }
   ]);
 
-  const handleAddStock = (stock: any) => {
-    const newStock = {
-      ...stock,
-      id: Date.now() + Math.random(), // Ensure unique ID
-    };
-    setPortfolio(prev => [...prev, newStock]);
+  const handleAddStock = async (stockData: any) => {
+    try {
+      await addInvestment(stockData);
+      toast({
+        title: "Investimento adicionado",
+        description: "O investimento foi adicionado ao seu portfólio!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível adicionar o investimento. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleRemoveStock = (stockId: number) => {
-    setPortfolio(prev => prev.filter(stock => stock.id !== stockId));
+  const handleRemoveStock = async (stockId: string) => {
+    try {
+      await deleteInvestment(stockId);
+      toast({
+        title: "Investimento removido",
+        description: "O investimento foi removido do seu portfólio!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover o investimento. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const totalPortfolioValue = portfolio.reduce((sum, stock) => sum + (stock.shares * stock.price), 0);
+  const totalPortfolioValue = investments.reduce((sum, stock) => sum + (parseInt(stock.shares) * parseFloat(stock.price)), 0);
+  
+  // Calculate sector allocation
+  const sectorAllocation = investments.reduce((acc, stock) => {
+    const sector = stock.sector || 'Other';
+    const shares = parseInt(stock.shares) || 0;
+    const price = parseFloat(stock.price) || 0;
+    const value = shares * price;
+    acc[sector] = (acc[sector] || 0) + value;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Generate random price changes for demonstration
+  const getRandomChange = () => (Math.random() - 0.5) * 10;
 
   return (
     <>
@@ -77,78 +110,180 @@ const Investments = () => {
             </p>
         </div>
 
-        {/* Add Stock Button */}
-        <button 
-          onClick={() => setIsStockModalOpen(true)}
-          className="button-glass w-full py-4 mb-8 text-white font-semibold flex items-center justify-center"
-        >
-          <Plus className="mr-2" size={20} />
-          Adicionar ao Portfólio
-        </button>
+        {/* Action Buttons */}
+        <div className="flex space-x-4 mb-8">
+          <button 
+            onClick={() => setIsStockModalOpen(true)}
+            className="button-glass flex-1 py-4 text-white font-semibold flex items-center justify-center"
+          >
+            <Plus className="mr-2" size={20} />
+            Adicionar ao Portfólio
+          </button>
+        </div>
+
+        {/* View Mode Toggle */}
+        <div className="flex space-x-2 mb-6">
+          <button 
+            onClick={() => setViewMode('portfolio')}
+            className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+              viewMode === 'portfolio' ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'
+            }`}
+          >
+            <PieChart size={16} className="mr-2" />
+            Portfólio
+          </button>
+          <button 
+            onClick={() => setViewMode('analytics')}
+            className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+              viewMode === 'analytics' ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'
+            }`}
+          >
+            <BarChart3 size={16} className="mr-2" />
+            Análise
+          </button>
+        </div>
       </div>
 
-      {/* Portfolio Holdings */}
+      {/* Content based on view mode */}
       <div className="px-6 space-y-6">
-        <div className="glass-card animate-fade-in">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-white/60 font-medium tracking-wider text-sm">SEU PORTFÓLIO</h3>
-              <div className="text-white text-lg font-semibold">
-                ${totalPortfolioValue.toFixed(2)}
+        {viewMode === 'portfolio' ? (
+          <div className="glass-card animate-fade-in">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-white/60 font-medium tracking-wider text-sm">SEU PORTFÓLIO</h3>
+                <div className="text-white text-lg font-semibold">
+                  R$ {totalPortfolioValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </div>
               </div>
-            </div>
 
-            {portfolio.length === 0 ? (
-              <div className="text-center text-white/60 py-8">
-                <TrendingUp className="mx-auto mb-4 opacity-50" size={48} />
-                <p>Nenhuma ação em seu portfólio ainda.</p>
-                <p className="text-sm">Adicione ações para começar a acompanhar seus investimentos.</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {portfolio.map((stock, index) => {
-                  const totalValue = stock.shares * stock.price;
-                  return (
-                    <div key={stock.id} className="bg-white/5 rounded-lg p-4">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <div className="text-white font-semibold">{stock.ticker}</div>
-                              <div className="text-white/80 text-sm">{stock.name}</div>
-                              <div className="text-white/60 text-xs">{stock.sector}</div>
+              {investments.length === 0 ? (
+                <div className="text-center text-white/60 py-8">
+                  <TrendingUp className="mx-auto mb-4 opacity-50" size={48} />
+                  <p>Nenhum investimento em seu portfólio ainda.</p>
+                  <p className="text-sm">Adicione investimentos para começar a acompanhar seu portfólio.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {investments.map((stock) => {
+                    const totalValue = parseInt(stock.shares) * parseFloat(stock.price);
+                    const change = getRandomChange();
+                    return (
+                      <div key={stock.id} className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start mb-2">
+                              <div>
+                                <div className="text-white font-semibold">{stock.ticker}</div>
+                                <div className="text-white/80 text-sm">{stock.name}</div>
+                                <div className="text-white/60 text-xs">{stock.sector}</div>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemoveStock(stock.id);
+                                }}
+                                className="p-1 rounded text-red-400 hover:bg-red-500/20 transition-colors"
+                              >
+                                <Trash2 size={16} />
+                              </button>
                             </div>
-                            <button
-                              onClick={() => handleRemoveStock(stock.id)}
-                              className="p-1 rounded text-red-400 hover:bg-red-500/20 transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                          <div className="flex justify-between items-end">
-                            <div>
-                              <div className="text-white/80 text-sm">{stock.shares} ações</div>
-                              <div className="text-white/60 text-xs">@ ${stock.price.toFixed(2)}</div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-white font-semibold">${totalValue.toFixed(2)}</div>
-                              <div className={`text-sm flex items-center ${
-                                stock.change >= 0 ? 'text-green-400' : 'text-red-400'
-                              }`}>
-                                {stock.change >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                                <span className="ml-1">{stock.change >= 0 ? '+' : ''}{stock.change}%</span>
+                            <div className="flex justify-between items-end">
+                              <div>
+                                <div className="text-white/80 text-sm">{stock.shares} ações</div>
+                                <div className="text-white/60 text-xs">@ R$ {parseFloat(stock.price).toFixed(2)}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-white font-semibold">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                                <div className={`text-sm flex items-center ${
+                                  change >= 0 ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                  {change >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                                  <span className="ml-1">{change >= 0 ? '+' : ''}{change.toFixed(2)}%</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Analytics View */
+          <div className="space-y-6">
+            {/* Portfolio Performance */}
+            <div className="glass-card animate-fade-in">
+              <div className="p-6">
+                <h3 className="text-white/60 font-medium tracking-wider text-sm mb-4">PERFORMANCE DO PORTFÓLIO</h3>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-white/5 rounded-lg p-4 text-center">
+                    <div className="text-white/80 text-sm">Valor Total</div>
+                    <div className="text-white text-lg font-semibold">
+                      R$ {totalPortfolioValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 text-center">
+                    <div className="text-white/80 text-sm">Posições</div>
+                    <div className="text-white text-lg font-semibold">{investments.length}</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 text-center">
+                    <div className="text-white/80 text-sm">Maior Posição</div>
+                    <div className="text-white text-lg font-semibold">
+                      {investments.length > 0 
+                        ? `R$ ${Math.max(...investments.map(inv => {
+                            const shares = parseInt(inv.shares) || 0;
+                            const price = parseFloat(inv.price) || 0;
+                            return shares * price;
+                          })).toFixed(2)}`
+                        : 'R$ 0,00'
+                      }
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4 text-center">
+                    <div className="text-white/80 text-sm">Setores</div>
+                    <div className="text-white text-lg font-semibold">{Object.keys(sectorAllocation).length}</div>
+                  </div>
+                </div>
+
+                {/* Sector Breakdown */}
+                {Object.keys(sectorAllocation).length > 0 && (
+                  <div>
+                    <h4 className="text-white font-medium mb-3">Alocação por Setor</h4>
+                    <div className="space-y-3">
+                      {Object.entries(sectorAllocation).map(([sector, value]) => {
+                        const numValue = Number(value);
+                        const percentage = totalPortfolioValue > 0 ? (numValue / totalPortfolioValue) * 100 : 0;
+                        return (
+                          <div key={sector}>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-white font-medium">{sector}</span>
+                              <div className="text-right">
+                                <div className="text-white font-semibold">
+                                  R$ {numValue.toFixed(2)}
+                                </div>
+                                <div className="text-white/80 text-sm">{percentage.toFixed(1)}%</div>
+                              </div>
+                            </div>
+                            <div className="progress-bar h-2">
+                              <div 
+                                className="progress-fill bg-gradient-to-r from-green-400 to-green-600"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Asset Allocation Card */}
         <div className="glass-card animate-fade-in">
