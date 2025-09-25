@@ -147,7 +147,8 @@
 @layer components {
   /* Glass Effect Components - Dark Glassmorphism */
   .glass-card {
-    @apply bg-white/10 border border-white/20 backdrop-blur-[20px] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+    @apply bg-white/[0.05] border border-white/[0.15] backdrop-blur-[24px] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+    backdrop-filter: blur(24px) saturate(180%);
   }
   
   /* Mobile-first responsive design */
