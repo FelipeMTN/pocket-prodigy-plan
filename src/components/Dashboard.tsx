@@ -4,7 +4,7 @@
 // liabilities should be moved into modals or separate pages to avoid
 // cluttering the dashboard.
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -40,19 +39,20 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-// Fetch aggregated assets/liabilities from Supabase.
+// Fetch aggregated assets/liabilities and cash flow from Supabase.
+// These queries should correspond to your tables and RLS policies.
 const useNetWorth = () => {
   return useQuery({
     queryKey: ["net-worth"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
+      if (!user) throw new Error("User not authenticated");
+      
       const { data: assets, error: assetsError } = await supabase
         .from("manual_assets")
         .select("value")
         .eq("user_id", user.id);
-      
+        
       const { data: liabilities, error: liabilitiesError } = await supabase
         .from("manual_liabilities")
         .select("balance")
@@ -73,25 +73,22 @@ const useNetWorth = () => {
         totalLiabilities,
         netWorth: totalAssets - totalLiabilities,
       };
-    },
+    }
   });
 };
 
-// Mock cash flow data since cash_flow_view doesn't exist
+// Example hook for cash flow; adjust based on your schema
 const useCashFlow = () => {
   return useQuery({
     queryKey: ["cash-flow"],
     queryFn: async () => {
-      // Return mock data for now since cash_flow_view doesn't exist
-      return [
-        { month: "Jan", income: 5000, expenses: 3000 },
-        { month: "Feb", income: 5200, expenses: 3200 },
-        { month: "Mar", income: 4800, expenses: 2900 },
-        { month: "Abr", income: 5100, expenses: 3100 },
-        { month: "Mai", income: 5300, expenses: 3300 },
-        { month: "Jun", income: 5000, expenses: 3000 },
-      ];
-    },
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+      
+      // For now return empty array since we don't have cash flow view
+      // This can be replaced with actual expenses data later
+      return [];
+    }
   });
 };
 
@@ -107,102 +104,18 @@ const Dashboard: React.FC = () => {
     error: cashFlowError,
   } = useCashFlow();
 
-  // State for toggling between overview, assets and liabilities
-  const [selectedView, setSelectedView] = useState<'overview' | 'assets' | 'liabilities'>('overview');
-
-  // Placeholder breakdown data; replace with real calculations or queries
-  const assetsBreakdown = [
-    { name: "Investimentos", amount: 100000, percentage: 60 },
-    { name: "Dinheiro", amount: 20000, percentage: 12 },
-    { name: "Imóveis", amount: 50000, percentage: 28 },
-  ];
-  const liabilitiesBreakdown = [
-    { name: "Cartões de Crédito", amount: 8000, percentage: 40 },
-    { name: "Financiamentos", amount: 12000, percentage: 60 },
-  ];
-
-  // Render functions for each view
-  const renderOverview = () => (
-    <div className="space-y-6">
-      {/* Assets Summary */}
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Ativos</h3>
-        <div className="space-y-2">
-          {assetsBreakdown.map((asset) => (
-            <div key={asset.name} className="space-y-1">
-              <div className="flex justify-between text-sm font-medium">
-                <span>{asset.name}</span>
-                <span>{asset.percentage}%</span>
-              </div>
-              <Progress value={asset.percentage} />
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* Liabilities Summary */}
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Passivos</h3>
-        <div className="space-y-2">
-          {liabilitiesBreakdown.map((liability) => (
-            <div key={liability.name} className="space-y-1">
-              <div className="flex justify-between text-sm font-medium">
-                <span>{liability.name}</span>
-                <span>{liability.percentage}%</span>
-              </div>
-              <Progress value={liability.percentage} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAssets = () => (
-    <div className="space-y-4">
-      {assetsBreakdown.map((asset) => (
-        <div key={asset.name} className="space-y-1">
-          <div className="flex justify-between text-sm font-medium">
-            <span>{asset.name}</span>
-            <span>{formatCurrency(asset.amount)}</span>
-          </div>
-          <p className="text-muted-foreground text-xs">
-            {asset.percentage}% do total de ativos
-          </p>
-          <Progress value={asset.percentage} />
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderLiabilities = () => (
-    <div className="space-y-4">
-      {liabilitiesBreakdown.map((liability) => (
-        <div key={liability.name} className="space-y-1">
-          <div className="flex justify-between text-sm font-medium">
-            <span>{liability.name}</span>
-            <span>{formatCurrency(liability.amount)}</span>
-          </div>
-          <p className="text-muted-foreground text-xs">
-            {liability.percentage}% do total de passivos
-          </p>
-          <Progress value={liability.percentage} />
-        </div>
-      ))}
-    </div>
-  );
-
   return (
-    <div className="p-4 space-y-6 gradient-home-blue">
-      {/* Header and AI button card */}
-      <Card className="glass-card relative">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl font-bold">Seu Patrimônio</CardTitle>
+    <div className="p-4 space-y-6">
+      {/* Net worth card */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle>Track your net worth</CardTitle>
           <CardDescription>
-            Acompanhe seus ativos e passivos em tempo real
+            Unite your financial life to see how your assets and liabilities change
+            over time.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Net worth summary */}
           {netWorthLoading ? (
             <Skeleton className="h-12 w-48" />
           ) : netWorthError ? (
@@ -213,42 +126,27 @@ const Dashboard: React.FC = () => {
                 {formatCurrency(netWorthData.netWorth)}
               </div>
               <p className="text-muted-foreground text-sm">
-                Ativos: {formatCurrency(netWorthData.totalAssets)} • Passivos: {formatCurrency(netWorthData.totalLiabilities)}
+                Ativos: {formatCurrency(netWorthData.totalAssets)} • Passivos:
+                {" "}
+                {formatCurrency(netWorthData.totalLiabilities)}
               </p>
             </div>
           ) : null}
-          {/* Toggle buttons */}
-          <div className="flex gap-2">
-            {(['overview', 'assets', 'liabilities'] as const).map((view) => (
-              <button
-                key={view}
-                onClick={() => setSelectedView(view)}
-                className={`px-3 py-1 text-xs font-medium rounded transition-all ${
-                  selectedView === view
-                    ? 'bg-white/20 text-white'
-                    : 'text-white/70 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {view === 'overview'
-                  ? 'Geral'
-                  : view === 'assets'
-                  ? 'Ativos'
-                  : 'Passivos'}
-              </button>
-            ))}
+          {/* Placeholder for future net worth chart */}
+          <div className="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={[]}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" hide />
+                <YAxis hide />
+                <Tooltip />
+                <Area type="monotone" dataKey="netWorth" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
-          {/* Conditional rendering based on selected view */}
-          {selectedView === 'overview' && renderOverview()}
-          {selectedView === 'assets' && renderAssets()}
-          {selectedView === 'liabilities' && renderLiabilities()}
         </CardContent>
-        <CardFooter className="justify-center pt-4">
-          <Button
-            className="button-primary"
-            onClick={() => {
-              /* open account linking modal */
-            }}
-          >
+        <CardFooter className="justify-center">
+          <Button onClick={() => {/* open account linking modal */}}>
             Conectar suas contas
           </Button>
         </CardFooter>
@@ -257,9 +155,10 @@ const Dashboard: React.FC = () => {
       {/* Cash flow card */}
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle>Acompanhe seu fluxo de caixa</CardTitle>
+          <CardTitle>Track your spending</CardTitle>
           <CardDescription>
-            Veja suas despesas e receitas claramente com AI que ajuda a manter o controle.
+            Veja suas despesas e receitas claramente com AI que ajuda a manter o
+            controle.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -282,12 +181,7 @@ const Dashboard: React.FC = () => {
           )}
         </CardContent>
         <CardFooter className="justify-center">
-          <Button
-            className="button-primary"
-            onClick={() => {
-              /* open add expense dialog */
-            }}
-          >
+          <Button onClick={() => {/* open add expense dialog */}}>
             Adicionar despesa
           </Button>
         </CardFooter>
@@ -304,7 +198,8 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="font-medium">Saiba seu patrimônio líquido futuro</p>
               <p className="text-muted-foreground text-sm">
-                Veja como seu dinheiro cresce com o tempo e como grandes eventos de vida o impactam.
+                Veja como seu dinheiro cresce com o tempo e como grandes eventos
+                de vida o impactam.
               </p>
             </div>
           </div>
@@ -313,7 +208,8 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="font-medium">Planeje grandes eventos</p>
               <p className="text-muted-foreground text-sm">
-                Modele mudanças como ter um filho ou mudar de trabalho e compare cenários facilmente.
+                Modele mudanças como ter um filho ou mudar de trabalho e
+                compare cenários facilmente.
               </p>
             </div>
           </div>
@@ -322,7 +218,8 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="font-medium">Orientação profissional</p>
               <p className="text-muted-foreground text-sm">
-                Planeje com confiança usando previsões baseadas em especialistas que calculam suas chances de sucesso automaticamente.
+                Planeje com confiança usando previsões baseadas em especialistas
+                que calculam suas chances de sucesso automaticamente.
               </p>
             </div>
           </div>
