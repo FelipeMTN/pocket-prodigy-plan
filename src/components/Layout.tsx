@@ -40,14 +40,14 @@ const Layout = () => {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EditableDashboard;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+    <div className="min-h-screen gradient-warm-main">
       {/* Main Content */}
       <main className="min-h-screen pb-20">
         <ActiveComponent />
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-2 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-white/80 px-2 py-2">
         <div className="flex justify-around max-w-lg mx-auto">
           {tabs.map((tab) => (
             <button

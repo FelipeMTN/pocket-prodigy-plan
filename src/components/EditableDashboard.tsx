@@ -248,15 +248,15 @@ const EditableDashboard = () => {
   };
 
   const ViewToggle = () => (
-    <div className="flex bg-white/10 p-1 rounded-lg mb-6 mx-4 backdrop-blur-sm">
+    <div className="flex bg-white/60 p-1 rounded-lg mb-6 mx-4 backdrop-blur-sm">
       {(['overview', 'assets', 'liabilities'] as const).map((view) => (
         <button
           key={view}
           onClick={() => setSelectedView(view)}
           className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
             selectedView === view
-              ? 'bg-white/20 text-white shadow-lg backdrop-blur-sm'
-              : 'text-white/70 hover:text-white hover:bg-white/10'
+              ? 'bg-white/80 text-gray-800 shadow-lg backdrop-blur-sm'
+              : 'text-gray-600 hover:text-gray-800 hover:bg-white/40'
           }`}
         >
           {view === 'overview' && 'Resumo'}
@@ -270,49 +270,49 @@ const EditableDashboard = () => {
   const renderOverview = () => (
     <div className="px-4 space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-white/80">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-400" />
-              <span className="text-sm font-medium text-white">Ativos</span>
+              <TrendingUp className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-gray-800">Ativos</span>
             </div>
-            <p className="text-2xl font-bold text-green-400">
+            <p className="text-2xl font-bold text-green-600">
               R$ {totalAssets.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </p>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-gray-600">
               {assets.length} {assets.length === 1 ? 'item' : 'itens'}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-white/80">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-red-400" />
-              <span className="text-sm font-medium text-white">Passivos</span>
+              <TrendingDown className="w-4 h-4 text-red-500" />
+              <span className="text-sm font-medium text-gray-800">Passivos</span>
             </div>
-            <p className="text-2xl font-bold text-red-400">
+            <p className="text-2xl font-bold text-red-500">
               R$ {totalLiabilities.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </p>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-gray-600">
               {liabilities.length} {liabilities.length === 1 ? 'item' : 'itens'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="glass-card border-white/10">
+      <Card className="glass-card border-white/80">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-white">Patrimônio Líquido</CardTitle>
+          <CardTitle className="text-lg text-gray-800">Patrimônio Líquido</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className={`text-3xl font-bold ${netWorth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+            <div className={`text-3xl font-bold ${netWorth >= 0 ? 'text-green-600' : 'text-red-500'}`}>
               R$ {Math.abs(netWorth).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               {netWorth < 0 && ' (Negativo)'}
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-white/80">
+              <div className="flex justify-between text-sm text-gray-700">
                 <span>Ativos: R$ {totalAssets.toLocaleString('pt-BR')}</span>
                 <span>Passivos: R$ {totalLiabilities.toLocaleString('pt-BR')}</span>
               </div>
@@ -327,27 +327,27 @@ const EditableDashboard = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-white/80">
           <CardContent className="p-3 text-center">
-            <DollarSign className="w-6 h-6 mx-auto mb-1 text-blue-400" />
-            <p className="text-lg font-bold text-white">{expenses.length}</p>
-            <p className="text-xs text-white/60">Gastos</p>
+            <DollarSign className="w-6 h-6 mx-auto mb-1 text-blue-600" />
+            <p className="text-lg font-bold text-gray-800">{expenses.length}</p>
+            <p className="text-xs text-gray-600">Gastos</p>
           </CardContent>
         </Card>
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-white/80">
           <CardContent className="p-3 text-center">
-            <TrendingUp className="w-6 h-6 mx-auto mb-1 text-purple-400" />
-            <p className="text-lg font-bold text-white">{goals.length}</p>
-            <p className="text-xs text-white/60">Metas</p>
+            <TrendingUp className="w-6 h-6 mx-auto mb-1 text-purple-600" />
+            <p className="text-lg font-bold text-gray-800">{goals.length}</p>
+            <p className="text-xs text-gray-600">Metas</p>
           </CardContent>
         </Card>
-        <Card className="glass-card border-white/10">
+        <Card className="glass-card border-white/80">
           <CardContent className="p-3 text-center">
-            <PiggyBank className="w-6 h-6 mx-auto mb-1 text-cyan-400" />
-            <p className="text-lg font-bold text-white">
+            <PiggyBank className="w-6 h-6 mx-auto mb-1 text-cyan-600" />
+            <p className="text-lg font-bold text-gray-800">
               R$ {totalInvestments.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
             </p>
-            <p className="text-xs text-white/60">Investimentos</p>
+            <p className="text-xs text-gray-600">Investimentos</p>
           </CardContent>
         </Card>
       </div>
@@ -357,7 +357,7 @@ const EditableDashboard = () => {
   const renderAssets = () => (
     <div className="px-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold text-white text-lg">Meus Ativos</h3>
+        <h3 className="font-semibold text-gray-800 text-lg">Meus Ativos</h3>
         <Dialog open={isAddingAsset} onOpenChange={setIsAddingAsset}>
           <DialogTrigger asChild>
             <Button size="sm" onClick={resetAssetForm} className="button-glass">
@@ -365,10 +365,10 @@ const EditableDashboard = () => {
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass-card border-white/10">
+          <DialogContent className="glass-card border-white/80">
             <DialogHeader>
-              <DialogTitle className="text-white">Adicionar Ativo</DialogTitle>
-              <DialogDescription className="text-white/70">
+              <DialogTitle className="text-gray-800">Adicionar Ativo</DialogTitle>
+              <DialogDescription className="text-gray-600">
                 Registre um novo ativo em seu patrimônio.
               </DialogDescription>
             </DialogHeader>
